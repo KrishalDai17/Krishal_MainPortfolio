@@ -28,10 +28,15 @@ function useSavingForm<T extends ListEditorItem>(
     setSaving(true);
     setError("");
     try {
+      let res;
       if (item && !String(item.id).startsWith("mock-")) {
-        await updateRecord(table, item.id, record);
+        res = await updateRecord(table, item.id, record);
       } else {
-        await createRecord(table, record);
+        res = await createRecord(table, record);
+      }
+      if (res && !res.success) {
+        setError(res.error || "Failed to save record.");
+        return;
       }
       close();
       router.refresh();
