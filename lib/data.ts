@@ -429,7 +429,7 @@ export const projects: Project[] = [
       "MySQL",
     ],
     github: "https://github.com/KrishalDai17",
-    demo: "/projects/dd-mart",
+    demo: "https://ddmart.com.np/",
     coverImageUrl:
       "https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=1200&q=80",
     screenshots: [

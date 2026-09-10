@@ -111,6 +111,7 @@ export async function getProjects(): Promise<Project[]> {
         `https://github.com/KrishalDai17/${r.slug || r.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
       demo:
         r.demo_url?.trim() ||
+        (r.slug === "dd-mart" ? "https://ddmart.com.np/" : undefined) ||
         r.github_url?.trim() ||
         `https://github.com/KrishalDai17/${r.slug || r.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
       coverImageUrl: r.cover_image_url ?? undefined,
