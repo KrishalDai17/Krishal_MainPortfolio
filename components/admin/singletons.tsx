@@ -17,7 +17,11 @@ function useSingletonSave(key: string) {
     setSaved(false);
     setError("");
     try {
-      await saveSingleton(key, data);
+      const res = await saveSingleton(key, data);
+      if (res && !res.success) {
+        setError(res.error || "Failed to save.");
+        return;
+      }
       setSaved(true);
       router.refresh();
     } catch (e) {
