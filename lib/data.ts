@@ -428,8 +428,8 @@ export const projects: Project[] = [
       "Node.js",
       "MySQL",
     ],
-    github: "https://github.com/KrishalDai17/DD-Mart",
-    demo: "https://github.com/KrishalDai17/DD-Mart",
+    github: "https://github.com/KrishalDai17",
+    demo: "/projects/dd-mart",
     coverImageUrl:
       "https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=1200&q=80",
     screenshots: [
@@ -470,8 +470,8 @@ export const projects: Project[] = [
     challengesSolutions:
       "Utilized Flutter cached network image caching strategies and memoized list item builders to minimize garbage collection pauses.",
     technology: ["Flutter", "Dart", "Android", "iOS", "Mobile UI/UX"],
-    github: "https://github.com/KrishalDai17/CNP-Explore",
-    demo: "https://github.com/KrishalDai17/CNP-Explore",
+    github: "https://github.com/KrishalDai17",
+    demo: "/projects/cnp-explore",
     coverImageUrl:
       "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1200&q=80",
     screenshots: [
@@ -520,8 +520,8 @@ export const projects: Project[] = [
       "Tailwind CSS",
       "ShadCN UI",
     ],
-    github: "https://github.com/KrishalDai17/Signup-Authentication-System",
-    demo: "https://github.com/KrishalDai17/Signup-Authentication-System",
+    github: "https://github.com/KrishalDai17",
+    demo: "/projects/signup-authentication-system",
     coverImageUrl:
       "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?auto=format&fit=crop&w=1200&q=80",
     screenshots: [

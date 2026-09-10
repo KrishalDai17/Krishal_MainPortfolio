@@ -142,7 +142,7 @@ export default function Projects({
                   <div className="flex items-center gap-2">
                     {/* Direct Git Project Code */}
                     <a
-                      href={project.github || `https://github.com/KrishalDai17/${project.slug}`}
+                      href={project.github || "https://github.com/KrishalDai17"}
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="Direct Git Project Code"
@@ -153,14 +153,18 @@ export default function Projects({
                       <span>CODE</span>
                     </a>
 
-                    {/* Direct Live Website Demo */}
+                    {/* Live Website Demo / Interactive Showcase */}
                     <a
-                      href={project.demo || project.github || `https://github.com/KrishalDai17/${project.slug}`}
-                      target="_blank"
+                      href={
+                        project.demo && !project.demo.includes("github.com")
+                          ? project.demo
+                          : `/projects/${project.slug}`
+                      }
+                      target={project.demo && !project.demo.includes("github.com") ? "_blank" : undefined}
                       rel="noopener noreferrer"
-                      aria-label="Open Live Project Website"
+                      aria-label="View Project Demo"
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-signal/60 bg-signal/15 text-signal hover:text-white hover:border-signal hover:bg-signal font-mono text-[10px] tracking-wider transition-all duration-150 rounded-sm hover:scale-105 active:scale-95 shadow-sm font-medium"
-                      title="Open Live Project Website"
+                      title="View Project Demo & Showcase"
                     >
                       <ExternalLink size={12} />
                       <span>DEMO</span>
