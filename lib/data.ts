@@ -8,6 +8,7 @@ export interface ProfileLink {
   linkedin: string;
   facebook: string;
   instagram: string;
+  whatsapp?: string;
   phone?: string;
   email?: string;
 }
@@ -57,6 +58,7 @@ export const profile: Profile = {
     linkedin: "https://www.linkedin.com/in/krishal-shrestha",
     facebook: "https://www.facebook.com/unique.krishal.17",
     instagram: "https://www.instagram.com/only__krishal/",
+    whatsapp: "https://wa.me/9779864029898",
   },
   tagline: ["ENGINEER BY LOGIC.", "CREATOR BY VISION."],
   subTagline: ["BUILD.", "TEST.", "CREATE.", "CAPTURE."],
@@ -763,6 +765,14 @@ export const philosophyStatement =
 // SOCIAL LINKS
 // ------------------------------------------------------------
 export const socialCards = [
+  {
+    key: "whatsapp",
+    label: "WHATSAPP",
+    tagline: "Direct instant messaging & quick collaboration.",
+    handle: "+977 9864029898",
+    url: "https://wa.me/9779864029898",
+    cta: "CHAT ON WHATSAPP",
+  },
   {
     key: "github",
     label: "GITHUB",

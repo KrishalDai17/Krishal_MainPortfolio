@@ -1,11 +1,90 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { UploadCloud, X, Loader2, Link2 } from "lucide-react";
+import { useRef, useState, useCallback } from "react";
+import { UploadCloud, X, Loader2, Link2, Crop } from "lucide-react";
+import Cropper from "react-easy-crop";
+import getCroppedImg from "@/lib/cropImage";
 
 export interface UploadedImage {
   url: string;
   publicId: string;
+}
+
+function CropModal({
+  imageSrc,
+  onCancel,
+  onCropCompleteConfirm,
+}: {
+  imageSrc: string;
+  onCancel: () => void;
+  onCropCompleteConfirm: (croppedFile: File) => void;
+}) {
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const onCropComplete = useCallback((_: any, croppedAreaPixels: any) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  }, []);
+
+  const handleConfirm = async () => {
+    if (!croppedAreaPixels) return;
+    setIsProcessing(true);
+    try {
+      const croppedImageFile = await getCroppedImg(imageSrc, croppedAreaPixels, 0);
+      if (croppedImageFile) {
+        onCropCompleteConfirm(croppedImageFile);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[60] bg-black/90 flex flex-col items-center justify-center p-4">
+      <div className="relative w-full max-w-2xl h-[60vh] bg-zinc-950 border border-zinc-800 overflow-hidden rounded-lg">
+        <Cropper
+          image={imageSrc}
+          crop={crop}
+          zoom={zoom}
+          aspect={4 / 3}
+          onCropChange={setCrop}
+          onCropComplete={onCropComplete}
+          onZoomChange={setZoom}
+        />
+      </div>
+      <div className="mt-6 flex items-center gap-4">
+        <input
+          type="range"
+          value={zoom}
+          min={1}
+          max={3}
+          step={0.1}
+          aria-labelledby="Zoom"
+          onChange={(e) => setZoom(Number(e.target.value))}
+          className="w-48"
+        />
+        <button
+          onClick={onCancel}
+          disabled={isProcessing}
+          className="px-4 py-2 border border-zinc-700 bg-zinc-900 text-zinc-200 rounded text-sm hover:bg-zinc-800 transition-colors"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={handleConfirm}
+          disabled={isProcessing}
+          className="px-4 py-2 bg-blue-600 text-white font-medium rounded text-sm hover:bg-blue-500 flex items-center gap-2 transition-colors shadow-sm"
+        >
+          {isProcessing ? <Loader2 className="animate-spin" size={16} /> : <Crop size={16} />}
+          Crop & Upload
+        </button>
+      </div>
+    </div>
+  );
 }
 
 export default function ImageUploader({
@@ -22,6 +101,7 @@ export default function ImageUploader({
   const [error, setError] = useState("");
   const [showUrlInput, setShowUrlInput] = useState(false);
   const [customUrl, setCustomUrl] = useState(value?.url ?? "");
+  const [cropImageSrc, setCropImageSrc] = useState<string | null>(null);
 
   const upload = async (file: File) => {
     setLoading(true);
@@ -72,23 +152,43 @@ export default function ImageUploader({
     }
   };
 
+  const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      const imageDataUrl = await readFile(file);
+      setCropImageSrc(imageDataUrl);
+    }
+    e.target.value = "";
+  };
+
   return (
     <div className="space-y-3">
+      {cropImageSrc && (
+        <CropModal
+          imageSrc={cropImageSrc}
+          onCancel={() => setCropImageSrc(null)}
+          onCropCompleteConfirm={(croppedFile) => {
+            setCropImageSrc(null);
+            upload(croppedFile);
+          }}
+        />
+      )}
+
       <div className="flex items-center justify-between">
-        <span className="font-mono text-[10px] tracking-widest2 text-paper-dim block">{label}</span>
+        <span className="font-mono text-xs text-zinc-300 font-medium tracking-wider block">{label}</span>
         <button
           type="button"
           onClick={() => setShowUrlInput((v) => !v)}
-          className="font-mono text-[10px] text-signal/80 hover:text-signal transition-colors flex items-center gap-1"
+          className="font-mono text-xs text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1.5"
         >
-          <Link2 size={11} />
+          <Link2 size={12} />
           {showUrlInput ? "Hide Direct URL" : "Or enter URL / path"}
         </button>
       </div>
 
       <div className="flex items-center gap-4">
         {value?.url ? (
-          <div className="relative h-20 w-20 shrink-0 overflow-hidden border border-line rounded bg-zinc-950">
+          <div className="relative h-20 w-20 shrink-0 overflow-hidden border border-zinc-700 rounded bg-zinc-950">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={value.url} alt="" className="h-full w-full object-cover" />
             <button
@@ -97,14 +197,14 @@ export default function ImageUploader({
                 onChange(null);
                 setCustomUrl("");
               }}
-              className="absolute top-1 right-1 bg-ink/80 p-0.5 text-paper hover:text-pink rounded"
+              className="absolute top-1 right-1 bg-zinc-900/90 text-zinc-300 hover:text-red-400 p-1 rounded"
               aria-label="Remove image"
             >
               <X size={12} />
             </button>
           </div>
         ) : (
-          <div className="h-20 w-20 shrink-0 border border-dashed border-line rounded flex items-center justify-center text-paper-dim/50">
+          <div className="h-20 w-20 shrink-0 border border-dashed border-zinc-700 bg-zinc-900/80 rounded flex items-center justify-center text-zinc-400">
             <UploadCloud size={20} />
           </div>
         )}
@@ -115,20 +215,20 @@ export default function ImageUploader({
               type="button"
               disabled={loading}
               onClick={() => inputRef.current?.click()}
-              className="inline-flex items-center gap-2 border border-line px-4 py-2 font-mono text-[10px] tracking-widest2 text-paper hover:border-signal transition-colors disabled:opacity-50"
+              className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white px-4 py-2 rounded-md font-mono text-xs font-semibold tracking-wider shadow-sm transition-colors disabled:opacity-50 cursor-pointer"
             >
-              {loading ? <Loader2 size={13} className="animate-spin" /> : <UploadCloud size={13} />}
+              {loading ? <Loader2 size={14} className="animate-spin" /> : <UploadCloud size={14} />}
               {loading ? "UPLOADING..." : value ? "REPLACE FILE" : "UPLOAD FILE"}
             </button>
 
             {value?.url && (
-              <span className="text-[11px] text-zinc-400 font-mono truncate max-w-[220px]">
+              <span className="text-xs text-zinc-300 font-mono truncate max-w-[220px]">
                 {value.url.split("/").pop()}
               </span>
             )}
           </div>
 
-          <p className="text-[11px] text-zinc-500">
+          <p className="text-xs text-zinc-400">
             Supports PNG, JPG, WEBP. Transparent background recommended for portrait.
           </p>
         </div>
@@ -138,11 +238,7 @@ export default function ImageUploader({
           type="file"
           accept="image/*"
           className="hidden"
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) upload(file);
-            e.target.value = "";
-          }}
+          onChange={onFileChange}
         />
       </div>
 
@@ -171,4 +267,12 @@ export default function ImageUploader({
       {error && <p className="mt-2 font-mono text-[10px] text-pink">{error}</p>}
     </div>
   );
+}
+
+function readFile(file: File): Promise<string> {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.addEventListener("load", () => resolve(reader.result as string), false);
+    reader.readAsDataURL(file);
+  });
 }

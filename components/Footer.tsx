@@ -1,4 +1,5 @@
 import { Github, Linkedin, Instagram, Facebook } from "lucide-react";
+import { WhatsAppIcon } from "./SocialLinks";
 import { profile as defaultProfile } from "@/lib/data";
 
 export default function Footer({
@@ -30,6 +31,18 @@ export default function Footer({
         <div className="flex flex-col items-start md:items-end gap-4">
           <span className="font-mono text-xs text-paper-dim">{profile.location}</span>
           <div className="flex items-center gap-5">
+            {profile.links.whatsapp && (
+              <a
+                href={profile.links.whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-paper-dim hover:text-lime transition-colors"
+                aria-label="WhatsApp"
+                title="WhatsApp"
+              >
+                <WhatsAppIcon size={16} />
+              </a>
+            )}
             <a href={profile.links.github} target="_blank" rel="noopener noreferrer" className="text-paper-dim hover:text-signal transition-colors" aria-label="GitHub">
               <Github size={16} />
             </a>

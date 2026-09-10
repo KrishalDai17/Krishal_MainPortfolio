@@ -914,14 +914,30 @@ export function SocialLinksEditor({ items }: { items: SocialLinkRow[] }) {
       title="Social Links & Channels"
       renderRow={(s) => (
         <div>
-          <p className="text-sm text-zinc-100">{s.label}</p>
-          <p className="text-xs text-zinc-500">{s.url}</p>
+          <div className="flex items-center gap-2">
+            <span className="text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded font-mono uppercase">
+              {s.key}
+            </span>
+            <p className="text-sm font-medium text-zinc-100">{s.label}</p>
+            {s.handle && <span className="text-xs text-zinc-400">({s.handle})</span>}
+          </div>
+          <p className="text-xs text-zinc-500 mt-1 truncate max-w-md">{s.url}</p>
         </div>
       )}
       renderForm={(item, close) => <SocialLinkForm item={item} close={close} />}
     />
   );
 }
+
+const SOCIAL_PRESETS = [
+  { key: "whatsapp", label: "WhatsApp", tagline: "Direct instant messaging & quick collaboration.", cta: "CHAT ON WHATSAPP", placeholderUrl: "https://wa.me/97798XXXXXXXX" },
+  { key: "github", label: "GitHub", tagline: "Code I build & open source repositories.", cta: "VIEW GITHUB", placeholderUrl: "https://github.com/KrishalDai17" },
+  { key: "linkedin", label: "LinkedIn", tagline: "Professional journey & engineering connect.", cta: "CONNECT ON LINKEDIN", placeholderUrl: "https://www.linkedin.com/in/username" },
+  { key: "instagram", label: "Instagram", tagline: "Frames I capture through my lens.", cta: "VIEW INSTAGRAM", placeholderUrl: "https://www.instagram.com/username" },
+  { key: "facebook", label: "Facebook", tagline: "Updates, collaborations and moments.", cta: "VIEW FACEBOOK", placeholderUrl: "https://www.facebook.com/username" },
+  { key: "twitter", label: "X / Twitter", tagline: "Thoughts on engineering and technology.", cta: "FOLLOW ON X", placeholderUrl: "https://x.com/username" },
+  { key: "youtube", label: "YouTube", tagline: "Video demos and creative walkthroughs.", cta: "WATCH ON YOUTUBE", placeholderUrl: "https://youtube.com/@username" },
+];
 
 function SocialLinkForm({
   item,
@@ -937,6 +953,16 @@ function SocialLinkForm({
   const [url, setUrl] = useState(item?.url ?? "");
   const [cta, setCta] = useState(item?.cta ?? "CONNECT");
 
+  const applyPreset = (presetKey: string) => {
+    const preset = SOCIAL_PRESETS.find((p) => p.key === presetKey);
+    if (!preset) return;
+    setKey(preset.key);
+    if (!label) setLabel(preset.label);
+    if (!tagline) setTagline(preset.tagline);
+    if (!cta || cta === "CONNECT") setCta(preset.cta);
+    if (!url) setUrl(preset.placeholderUrl);
+  };
+
   const { save, saving, error } = useSavingForm("social_links", item, close);
 
   return (
@@ -946,26 +972,82 @@ function SocialLinkForm({
       onCancel={close}
       onSubmit={(e) => {
         e.preventDefault();
-        save({ key, label, tagline, handle: handle || null, url, cta });
+        save({ key: key.trim().toLowerCase(), label, tagline, handle: handle || null, url, cta });
       }}
     >
-      <Field label="Key (e.g. github, linkedin)">
-        <TextInput required value={key} onChange={(e) => setKey(e.target.value)} />
+      {!item && (
+        <div className="space-y-1.5 pb-2 border-b border-zinc-800">
+          <span className="text-xs text-zinc-400 font-medium block">Quick Platform Presets:</span>
+          <div className="flex flex-wrap gap-1.5">
+            {SOCIAL_PRESETS.map((p) => (
+              <button
+                key={p.key}
+                type="button"
+                onClick={() => applyPreset(p.key)}
+                className={`text-[11px] px-2.5 py-1 rounded font-mono border transition-colors ${
+                  key === p.key
+                    ? "bg-blue-600 text-white border-blue-500"
+                    : "bg-zinc-900 border-zinc-700 text-zinc-300 hover:border-blue-400 hover:text-white"
+                }`}
+              >
+                + {p.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <Field label="Platform Key (e.g. whatsapp, github, linkedin)">
+          <TextInput
+            required
+            value={key}
+            onChange={(e) => setKey(e.target.value)}
+            placeholder="whatsapp"
+          />
+        </Field>
+        <Field label="Display Label">
+          <TextInput
+            required
+            value={label}
+            onChange={(e) => setLabel(e.target.value)}
+            placeholder="WhatsApp"
+          />
+        </Field>
+      </div>
+
+      <Field label="URL (e.g. https://wa.me/9779864029898 or https://github.com/...)">
+        <TextInput
+          required
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder="https://wa.me/9779864029898"
+        />
       </Field>
-      <Field label="Display Label">
-        <TextInput required value={label} onChange={(e) => setLabel(e.target.value)} />
-      </Field>
-      <Field label="URL">
-        <TextInput required value={url} onChange={(e) => setUrl(e.target.value)} />
-      </Field>
-      <Field label="Username / Handle (e.g. @KrishalDai17)">
-        <TextInput value={handle} onChange={(e) => setHandle(e.target.value)} />
-      </Field>
-      <Field label="Tagline">
-        <TextInput value={tagline} onChange={(e) => setTagline(e.target.value)} />
-      </Field>
-      <Field label="CTA Button Text">
-        <TextInput value={cta} onChange={(e) => setCta(e.target.value)} />
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <Field label="Username / Handle (e.g. +977 9864029898 or @KrishalDai17)">
+          <TextInput
+            value={handle}
+            onChange={(e) => setHandle(e.target.value)}
+            placeholder="+977 9864029898"
+          />
+        </Field>
+        <Field label="CTA Button Text (e.g. CHAT ON WHATSAPP)">
+          <TextInput
+            value={cta}
+            onChange={(e) => setCta(e.target.value)}
+            placeholder="CHAT ON WHATSAPP"
+          />
+        </Field>
+      </div>
+
+      <Field label="Tagline / Description">
+        <TextInput
+          value={tagline}
+          onChange={(e) => setTagline(e.target.value)}
+          placeholder="Direct instant messaging & quick collaboration."
+        />
       </Field>
     </FormShell>
   );

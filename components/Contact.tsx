@@ -89,6 +89,14 @@ export default function Contact({
 
           <div className="mt-8 flex flex-wrap gap-4">
             <a
+              href={profile.links.whatsapp || `https://wa.me/977${profile.phone}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 border border-line bg-paper/5 px-6 py-3 font-mono text-[11px] tracking-widest2 text-paper hover:border-lime hover:text-lime hover:scale-105 active:scale-95 transition-all duration-200 rounded-sm"
+            >
+              WHATSAPP
+            </a>
+            <a
               href={`mailto:${profile.email}`}
               className="inline-flex items-center gap-2 border border-line bg-paper/5 px-6 py-3 font-mono text-[11px] tracking-widest2 text-paper hover:border-signal hover:text-signal hover:scale-105 active:scale-95 transition-all duration-200 rounded-sm"
             >
