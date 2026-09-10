@@ -107,26 +107,22 @@ export default async function ProjectDetailPage({ params }: PageProps) {
 
           {/* CTAs */}
           <div className="mt-8 flex flex-wrap items-center gap-4">
-            {project.github && (
-              <a
-                href={project.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-signal text-white px-6 py-3.5 font-mono text-xs tracking-widest2 hover:bg-signal/80 transition-all shadow-md shadow-signal/20"
-              >
-                <Github size={15} /> GITHUB REPOSITORY
-              </a>
-            )}
-            {project.demo && (
-              <a
-                href={project.demo}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 border border-line bg-paper/5 px-6 py-3.5 font-mono text-xs tracking-widest2 text-paper hover:border-signal transition-colors"
-              >
-                <ExternalLink size={15} /> LIVE DEMO
-              </a>
-            )}
+            <a
+              href={project.github || `https://github.com/KrishalDai17/${project.slug}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-signal text-white px-6 py-3.5 font-mono text-xs tracking-widest2 hover:bg-signal/80 transition-all shadow-md shadow-signal/20 hover:scale-105 active:scale-95"
+            >
+              <Github size={15} /> GITHUB REPOSITORY
+            </a>
+            <a
+              href={project.demo || project.github || `https://github.com/KrishalDai17/${project.slug}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 border border-line bg-paper/5 px-6 py-3.5 font-mono text-xs tracking-widest2 text-paper hover:border-signal hover:text-signal transition-colors hover:scale-105 active:scale-95"
+            >
+              <ExternalLink size={15} /> LIVE DEMO
+            </a>
           </div>
         </header>
 

@@ -180,12 +180,6 @@ export default function Projects({
           ))}
         </div>
       </div>
-
-      {/* Interactive Live Project Runner Modal */}
-      <LiveDemoModal
-        project={activeDemoProject}
-        onClose={() => setActiveDemoProject(null)}
-      />
     </section>
   );
 }
