@@ -41,17 +41,6 @@ export default function Hero({
           
           {/* LEFT: Typographic Identity & Sequential Entrance */}
           <div className="lg:col-span-7 flex flex-col justify-center">
-            {/* 1. Status location badge */}
-            <Reveal delay={0} direction="down">
-              <div className="inline-flex items-center gap-2.5 font-mono text-[11px] tracking-widest2 text-signal mb-5 border border-line/60 bg-paper/5 px-3 py-1.5 w-fit rounded-sm backdrop-blur-sm">
-                <Terminal size={12} className="text-signal" />
-                <span className="h-1.5 w-1.5 rounded-full bg-signal animate-blink" />
-                <span>{profile.location.toUpperCase()}</span>
-                <span className="text-paper-dim/40">•</span>
-                <span className="text-paper-dim">SYSTEM ONLINE</span>
-              </div>
-            </Reveal>
-
             {/* 2. Main Name Heading */}
             <Reveal delay={100} direction="up">
               <h1 className="font-display text-hero uppercase text-paper tracking-tight">
@@ -65,10 +54,11 @@ export default function Hero({
 
             {/* 3. Signature Headline */}
             <Reveal delay={200} direction="up">
-              <div className="mt-5 text-display-md uppercase tracking-tight">
+              <div className="mt-5 text-display-md uppercase tracking-tight leading-tight">
                 <span className="font-display font-semibold text-signal">
                   {profile.tagline[0]}
-                </span>{" "}
+                </span>
+                <br />
                 <span className="font-serif italic text-violet font-normal">
                   {profile.tagline[1]}
                 </span>
