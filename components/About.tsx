@@ -53,11 +53,6 @@ export default function About({
             <Sparkles size={13} />
             <span>01 — ABOUT & PROFILE</span>
           </div>
-          <h2 className="mt-4 font-display text-display-lg uppercase text-paper max-w-3xl">
-            Engineer by logic.
-            <br />
-            <span className="text-paper-dim">Problem solver by practice.</span>
-          </h2>
         </Reveal>
 
         {/* Two-column layout: Left Portrait, Right About Me */}
