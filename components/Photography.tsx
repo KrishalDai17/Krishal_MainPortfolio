@@ -82,7 +82,7 @@ export default function Photography({
               key={photo.id}
               onClick={() => setActivePhoto(photo)}
               data-cursor="VIEW"
-              className="group relative w-full mb-6 break-inside-avoid border border-line hover:border-pink transition-all text-left overflow-hidden block bg-ink-soft"
+              className="group relative w-full mb-6 break-inside-avoid border border-line rounded-sm hover:border-pink hover:-translate-y-1.5 hover:shadow-[0_16px_36px_-8px_rgba(236,72,153,0.22)] transition-all duration-300 text-left overflow-hidden block bg-ink-soft/50"
             >
               <div
                 className={`relative w-full overflow-hidden ${

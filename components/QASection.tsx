@@ -76,11 +76,11 @@ export default function QASection({
               <span className="font-mono text-[10px] tracking-widest2 text-paper-dim block mb-4">
                 CORE TESTING SPECIALIZATIONS
               </span>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-px bg-line border border-line">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-px bg-line border border-line rounded-sm overflow-hidden">
                 {qaCards.map((card, i) => (
-                  <Reveal key={card} delay={i * 30}>
-                    <div className="bg-ink p-5 h-full min-h-[90px] flex items-end hover:bg-ink-soft transition-colors">
-                      <span className="font-display text-sm uppercase text-paper leading-tight">
+                  <Reveal key={card} delay={i * 30} direction="scale">
+                    <div className="bg-ink p-5 h-full min-h-[90px] flex items-end hover:bg-ink-soft group transition-all duration-200 cursor-default">
+                      <span className="font-display text-sm uppercase text-paper leading-tight group-hover:text-lime transition-colors">
                         {card}
                       </span>
                     </div>
@@ -97,7 +97,7 @@ export default function QASection({
                 {qaTools.map((tool) => (
                   <span
                     key={tool}
-                    className="border border-line bg-paper/5 px-3.5 py-1.5 font-mono text-[11px] tracking-wider text-paper hover:border-lime transition-colors"
+                    className="border border-line bg-paper/5 px-3.5 py-1.5 font-mono text-[11px] tracking-wider text-paper hover:border-lime hover:text-lime hover:scale-105 active:scale-95 transition-all duration-200 rounded-sm cursor-default"
                   >
                     {tool}
                   </span>

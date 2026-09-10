@@ -118,6 +118,7 @@ export async function submitContactInquiry(data: {
     });
     if (error) {
       console.warn("Could not write contact message to Supabase:", error.message);
+      throw new Error("Failed to save message to database. Table might be missing.");
     }
   }
 

@@ -290,61 +290,203 @@ html.light .glass-panel:hover {
   width: max-content;
 }
 
-/* -------------------- Traditional Nepali Mask Intro Experience -------------------- */
-@keyframes maskCinematicAnimation {
+/* Intro visibility controlled by script to prevent FOUC */
+.intro-overlay-ssr {
+  display: none !important;
+}
+html.mask-intro-active .intro-overlay-ssr {
+  display: flex !important;
+}
+html.mask-intro-active body {
+  overflow: hidden;
+}
+
+/* -------------------- Cinematic Lakhey Mask Splash Screen -------------------- */
+@keyframes lakheyMaskCinematic {
   0% {
     opacity: 0;
-    transform: scale(0.96);
+    transform: translate3d(0, 0, 0) scale(0.15);
+    filter: blur(10px) brightness(0.4);
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   }
-  30% {
-    opacity: 1;
-    transform: scale(1.03);
+  12% {
+    opacity: 0.12;
+    transform: translate3d(0, 0, 0) scale(0.22);
+    filter: blur(6px) brightness(0.65);
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   }
-  58% {
+  50% {
     opacity: 1;
-    transform: scale(1.00) translateY(-2px);
+    transform: translate3d(0, 0, 0) scale(1.0);
+    filter: blur(0px) brightness(1.0);
+    animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
   }
-  78% {
+  65% {
     opacity: 1;
-    transform: scale(1.01) translateY(0);
-  }
-  88% {
-    opacity: 1;
-    transform: scale(1.00);
+    transform: translate3d(0, 0, 0) scale(1.15);
+    filter: blur(0px) brightness(1.05);
+    animation-timing-function: cubic-bezier(0.8, 0, 0.2, 1);
   }
   100% {
-    opacity: 0;
-    transform: scale(1.00);
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(45);
+    filter: blur(4px) brightness(0.1);
   }
 }
 
-@keyframes maskCaptionFade {
-  0% {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  35% {
-    opacity: 0.85;
-    transform: translateY(0);
-  }
-  85% {
-    opacity: 0.85;
-    transform: translateY(0);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-}
-
-.mask-cinematic-art {
-  animation-name: maskCinematicAnimation;
-  animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
+.lakhey-mask-animated {
+  animation-name: lakheyMaskCinematic;
   animation-fill-mode: forwards;
-  will-change: transform, opacity;
+  will-change: transform, opacity, filter;
+  transform-origin: center center;
+  backface-visibility: hidden;
 }
 
-.mask-subtle-caption {
-  animation: maskCaptionFade 2.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-  will-change: transform, opacity;
+@media (prefers-reduced-motion: reduce) {
+  .lakhey-mask-animated {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}
+
+/* -------------------- Interactive & Circular Background Animations -------------------- */
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes reverseSpinSlow {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes floatSubtle {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes floatCircle1 {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(35px, -45px) scale(1.08);
+  }
+  66% {
+    transform: translate(-25px, 25px) scale(0.95);
+  }
+}
+
+@keyframes floatCircle2 {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(-45px, 35px) scale(0.92);
+  }
+  66% {
+    transform: translate(30px, -30px) scale(1.06);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.25;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes buttonShine {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 200%;
+  }
+}
+
+.animate-spin-slow {
+  animation: spinSlow 36s linear infinite;
+  will-change: transform;
+}
+
+.animate-spin-ultra-slow {
+  animation: spinSlow 55s linear infinite;
+  will-change: transform;
+}
+
+.animate-reverse-spin-slow {
+  animation: reverseSpinSlow 42s linear infinite;
+  will-change: transform;
+}
+
+.animate-float-subtle {
+  animation: floatSubtle 5s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-float-circle-1 {
+  animation: floatCircle1 24s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-float-circle-2 {
+  animation: floatCircle2 28s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 6s ease-in-out infinite;
+}
+
+/* Button shine effect */
+.btn-shine-sweep {
+  position: relative;
+  overflow: hidden;
+}
+.btn-shine-sweep::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.22),
+    transparent
+  );
+  transform: skewX(-20deg);
+  transition: none;
+}
+.btn-shine-sweep:hover::after {
+  animation: buttonShine 0.85s ease-out;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

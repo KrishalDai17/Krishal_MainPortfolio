@@ -64,14 +64,14 @@ export default function About({
         <div className="mt-16 grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           {/* LEFT: Portrait Photo & Status */}
           <div className="lg:col-span-5 space-y-6">
-            <Reveal>
-              <div className="hud-frame relative aspect-[4/5] max-w-md mx-auto lg:mx-0 overflow-hidden border border-line bg-ink-soft group">
+            <Reveal direction="left">
+              <div className="hud-frame relative aspect-[4/5] max-w-md mx-auto lg:mx-0 overflow-hidden border border-line bg-ink-soft group rounded-sm transition-all duration-300 hover:border-signal/80 hover:shadow-[0_16px_36px_-8px_rgba(79,124,255,0.22)]">
                 {profile.avatarUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={profile.avatarUrl}
                     alt={profile.name}
-                    className="h-full w-full object-cover grayscale contrast-105 group-hover:grayscale-0 transition-all duration-700"
+                    className="h-full w-full object-cover grayscale contrast-105 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
                   />
                 ) : (
                   <div className="h-full w-full flex items-center justify-center bg-paper/5 font-mono text-xs text-paper-dim">
@@ -86,14 +86,17 @@ export default function About({
                   <span className="flex items-center gap-1.5">
                     <MapPin size={12} className="text-signal" /> {profile.location.toUpperCase()}
                   </span>
-                  <span className="text-lime font-semibold">ONLINE</span>
+                  <span className="text-lime font-semibold flex items-center gap-1">
+                    <span className="h-1.5 w-1.5 rounded-full bg-lime animate-blink" />
+                    ONLINE
+                  </span>
                 </div>
               </div>
             </Reveal>
 
             {/* Quick Profile Meta */}
-            <Reveal delay={100}>
-              <div className="glass-panel p-5 border border-line space-y-3 font-mono text-xs max-w-md mx-auto lg:mx-0">
+            <Reveal delay={100} direction="left">
+              <div className="glass-panel p-5 border border-line rounded-sm space-y-3 font-mono text-xs max-w-md mx-auto lg:mx-0 hover:border-signal/40 transition-colors">
                 <div className="flex justify-between border-b border-line/50 pb-2">
                   <span className="text-paper-dim">NAME</span>
                   <span className="text-paper">{profile.name}</span>
@@ -113,7 +116,7 @@ export default function About({
           {/* RIGHT: About Me Content */}
           <div className="lg:col-span-7 space-y-8">
             {/* Career Summary Callout */}
-            <Reveal delay={80}>
+            <Reveal delay={80} direction="right">
               <div className="border-l-2 border-signal pl-6 py-1">
                 <p className="font-display text-xl md:text-2xl text-paper leading-snug">
                   {careerSummary}
@@ -124,7 +127,7 @@ export default function About({
             {/* Intro Paragraphs */}
             <div className="space-y-4">
               {aboutIntro.map((p, i) => (
-                <Reveal key={i} delay={140 + i * 60}>
+                <Reveal key={i} delay={140 + i * 60} direction="right">
                   <p className="text-paper-dim leading-relaxed text-base md:text-lg">
                     {p}
                   </p>
@@ -133,7 +136,7 @@ export default function About({
             </div>
 
             {/* Highlights Badges */}
-            <Reveal delay={280}>
+            <Reveal delay={280} direction="up">
               <div>
                 <span className="font-mono text-[10px] tracking-widest2 text-paper-dim block mb-3">
                   CORE HIGHLIGHTS
@@ -142,7 +145,7 @@ export default function About({
                   {highlights.map((h) => (
                     <span
                       key={h}
-                      className="border border-line bg-paper/5 px-3 py-1.5 font-mono text-[11px] tracking-wider text-paper hover:border-signal transition-colors"
+                      className="border border-line bg-paper/5 px-3 py-1.5 font-mono text-[11px] tracking-wider text-paper hover:border-signal hover:text-signal hover:scale-105 transition-all duration-200 rounded-sm"
                     >
                       {h}
                     </span>
@@ -155,7 +158,7 @@ export default function About({
 
         {/* "What I Do" Section */}
         <div className="mt-24 border-t border-line pt-16">
-          <Reveal>
+          <Reveal direction="up">
             <span className="font-mono text-[11px] tracking-widest2 text-cyan block mb-2">
               DISCIPLINES
             </span>
@@ -169,14 +172,14 @@ export default function About({
             {whatIDo.map((item, i) => {
               const IconComp = iconMap[item.category] || Code;
               return (
-                <Reveal key={item.title} delay={i * 80}>
-                  <div className="glass-panel p-7 h-full flex flex-col justify-between group border border-line hover:border-signal transition-all">
+                <Reveal key={item.title} delay={i * 80} direction="up">
+                  <div className="glass-panel p-7 h-full flex flex-col justify-between group border border-line rounded-sm hover:border-signal/80 hover:-translate-y-1.5 hover:shadow-[0_16px_32px_-8px_rgba(79,124,255,0.18)] transition-all duration-300 bg-ink-soft/30 backdrop-blur-sm">
                     <div>
                       <div className="flex items-center justify-between mb-4">
-                        <div className="p-2.5 border border-line text-signal bg-paper/5 group-hover:border-signal group-hover:bg-signal/10 transition-colors">
+                        <div className="p-2.5 border border-line text-signal bg-paper/5 rounded-sm group-hover:border-signal group-hover:bg-signal/15 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                           <IconComp size={18} />
                         </div>
-                        <span className="font-mono text-[10px] tracking-widest2 text-paper-dim">
+                        <span className="font-mono text-[10px] tracking-widest2 text-paper-dim group-hover:text-signal transition-colors">
                           {item.category}
                         </span>
                       </div>

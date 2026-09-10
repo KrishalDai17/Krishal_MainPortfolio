@@ -55,7 +55,7 @@ export default function Contact({
     >
       <div className="mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-14 items-start">
         {/* Left: Contact Info */}
-        <Reveal className="lg:col-span-5">
+        <Reveal direction="left" className="lg:col-span-5">
           <span className="font-mono text-[11px] tracking-widest2 text-signal">
             07 — CONTACT
           </span>
@@ -73,16 +73,16 @@ export default function Contact({
             </div>
             <a
               href={`tel:+977${profile.phone}`}
-              className="flex items-center gap-3 hover:text-signal transition-colors"
+              className="flex items-center gap-3 hover:text-signal transition-colors group"
             >
-              <Phone size={16} className="text-signal" />
+              <Phone size={16} className="text-signal transition-transform group-hover:scale-110" />
               <span>+977 {profile.phone}</span>
             </a>
             <a
               href={`mailto:${profile.email}`}
-              className="flex items-center gap-3 hover:text-signal transition-colors"
+              className="flex items-center gap-3 hover:text-signal transition-colors group"
             >
-              <Mail size={16} className="text-signal" />
+              <Mail size={16} className="text-signal transition-transform group-hover:scale-110" />
               <span>{profile.email}</span>
             </a>
           </div>
@@ -90,13 +90,13 @@ export default function Contact({
           <div className="mt-8 flex flex-wrap gap-4">
             <a
               href={`mailto:${profile.email}`}
-              className="inline-flex items-center gap-2 border border-line bg-paper/5 px-6 py-3 font-mono text-[11px] tracking-widest2 text-paper hover:border-signal transition-colors"
+              className="inline-flex items-center gap-2 border border-line bg-paper/5 px-6 py-3 font-mono text-[11px] tracking-widest2 text-paper hover:border-signal hover:text-signal hover:scale-105 active:scale-95 transition-all duration-200 rounded-sm"
             >
               EMAIL ME
             </a>
             <a
               href={`tel:+977${profile.phone}`}
-              className="inline-flex items-center gap-2 border border-line bg-paper/5 px-6 py-3 font-mono text-[11px] tracking-widest2 text-paper hover:border-signal transition-colors"
+              className="inline-flex items-center gap-2 border border-line bg-paper/5 px-6 py-3 font-mono text-[11px] tracking-widest2 text-paper hover:border-signal hover:text-signal hover:scale-105 active:scale-95 transition-all duration-200 rounded-sm"
             >
               CALL ME
             </a>
@@ -104,8 +104,8 @@ export default function Contact({
         </Reveal>
 
         {/* Right: Contact Form */}
-        <Reveal delay={100} className="lg:col-span-7">
-          <div className="glass-panel p-8 md:p-10 border border-line">
+        <Reveal delay={100} direction="right" className="lg:col-span-7">
+          <div className="glass-panel p-8 md:p-10 border border-line rounded-sm shadow-[0_16px_36px_-8px_rgba(0,0,0,0.3)]">
             {submitted ? (
               <div className="py-12 text-center space-y-4 animate-fade-up">
                 <div className="h-12 w-12 rounded-full bg-lime/20 border border-lime text-lime mx-auto flex items-center justify-center">
@@ -211,7 +211,7 @@ export default function Contact({
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="group inline-flex items-center gap-2 bg-signal disabled:opacity-50 text-white px-8 py-3.5 font-mono text-[11px] tracking-widest2 hover:bg-signal/80 transition-all shadow-md shadow-signal/20"
+                  className="btn-shine-sweep group inline-flex items-center gap-2.5 bg-gradient-to-r from-signal via-signal to-violet disabled:opacity-50 text-white px-8 py-3.5 font-mono text-[11px] tracking-widest2 rounded-sm shadow-md shadow-signal/25 hover:shadow-signal/45 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
                 >
                   {submitting ? (
                     <>
@@ -223,7 +223,7 @@ export default function Contact({
                       TRANSMIT INQUIRY
                       <Send
                         size={14}
-                        className="transition-transform group-hover:translate-x-0.5"
+                        className="transition-transform duration-300 group-hover:translate-x-1"
                       />
                     </>
                   )}

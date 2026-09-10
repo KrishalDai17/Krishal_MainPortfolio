@@ -55,7 +55,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex">
+    <div className="dark min-h-screen bg-zinc-950 text-zinc-100 flex" style={{ colorScheme: "dark" }}>
       {/* Sidebar */}
       <aside className="w-64 shrink-0 border-r border-zinc-800 hidden md:flex flex-col justify-between">
         <div>

@@ -5,8 +5,6 @@ import ThemeInit from "@/components/ThemeInit";
 import CustomCursor from "@/components/CustomCursor";
 import ScrollProgress from "@/components/ScrollProgress";
 import AmbientBackground from "@/components/AmbientBackground";
-import NepaliMaskIntro from "@/components/NepaliMaskIntro";
-import { getSettings } from "@/lib/cms/content";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -70,34 +68,23 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const settings = await getSettings();
-
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var s=localStorage.getItem('ks-theme');var p=window.matchMedia('(prefers-color-scheme: light)').matches;var t=s||(p?'light':'dark');if(t==='light'){document.documentElement.classList.add('light');}else{document.documentElement.classList.remove('light');}}catch(e){}})();`,
-          }}
-        />
-      </head>
       <body
         className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} ${dmSans.variable} ${instrumentSerif.variable} font-body`}
       >
-        <ThemeInit />
-        <NepaliMaskIntro
-          imageUrl={settings.introImageUrl}
-          durationSeconds={settings.introDuration}
-          frequency={settings.introFrequency}
-          enabled={settings.introEnabled}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var s=localStorage.getItem('ks-theme');var p=window.matchMedia('(prefers-color-scheme: light)').matches;var t=s||(p?'light':'dark');if(t==='light'){document.documentElement.classList.add('light');}else{document.documentElement.classList.remove('light');}if(!sessionStorage.getItem('ks-mask-intro-seen')&&window.location.pathname==='/'){document.documentElement.classList.add('mask-intro-active');}}catch(e){}})();`,
+          }}
         />
+        <ThemeInit />
         <AmbientBackground />
-        <div className="grain-overlay bg-grain" aria-hidden="true" />
         <CustomCursor />
         <ScrollProgress />
         {children}

@@ -28,8 +28,8 @@ export default function Education({
 
         <div className="mt-14 border-t border-line">
           {education.map((edu, i) => (
-            <Reveal key={edu.institution} delay={i * 90}>
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 py-10 border-b border-line items-start">
+            <Reveal key={edu.institution} delay={i * 90} direction="up">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 py-10 border-b border-line items-start group hover:bg-paper/[0.02] px-4 -mx-4 transition-colors rounded-sm">
                 <div className="md:col-span-3">
                   <span className="font-mono text-sm tracking-widest2 text-signal block">
                     {edu.period}
@@ -40,7 +40,7 @@ export default function Education({
                 </div>
 
                 <div className="md:col-span-9">
-                  <h3 className="font-display text-2xl uppercase text-paper">
+                  <h3 className="font-display text-2xl uppercase text-paper group-hover:text-signal transition-colors">
                     {edu.institution}
                   </h3>
                   <p className="mt-1 text-base text-paper-dim font-medium">

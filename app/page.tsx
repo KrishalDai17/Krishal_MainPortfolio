@@ -1,4 +1,5 @@
 import Navbar from "@/components/Navbar";
+import NepaliMaskIntro from "@/components/NepaliMaskIntro";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
 import SkillMatrix from "@/components/SkillMatrix";
@@ -44,6 +45,13 @@ export default async function Home() {
 
   return (
     <main className="relative">
+      <NepaliMaskIntro
+        imageUrl={settings.introImageUrl}
+        durationSeconds={settings.introDuration}
+        frequency={settings.introFrequency}
+        enabled={settings.introEnabled}
+      />
+
       {/* 1. Navbar */}
       <Navbar
         availableForOpportunities={settings.availableForOpportunities}

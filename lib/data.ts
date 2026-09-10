@@ -51,7 +51,7 @@ export const profile: Profile = {
   location: "Kathmandu, Nepal",
   phone: "9864029898",
   email: "krishalstha87@gmail.com",
-  avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
+  avatarUrl: "/images/krishal-profile.png",
   links: {
     github: "https://github.com/KrishalDai17",
     linkedin: "https://www.linkedin.com/in/krishal-shrestha",
@@ -913,7 +913,7 @@ export const siteSettings: SiteSettings = {
   availableForOpportunities: true,
   footerNote: `© 2026 ${profile.name}. All rights reserved.`,
   introEnabled: true,
-  introDuration: 2.8,
+  introDuration: 3.2,
   introFrequency: "once_per_session",
-  introImageUrl: "/images/nepali-mask-intro.jpg",
+  introImageUrl: "/images/lakhey-mask-transparent.png",
 };

@@ -70,8 +70,8 @@ export default function Projects({
         {/* Projects Cards Grid */}
         <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {visibleProjects.map((project, i) => (
-            <Reveal key={project.slug || project.index} delay={i * 80}>
-              <div className="glass-panel h-full flex flex-col justify-between border border-line hover:border-signal/80 transition-all duration-300 group overflow-hidden">
+            <Reveal key={project.slug || project.index} delay={i * 80} direction="up">
+              <div className="glass-panel h-full flex flex-col justify-between border border-line rounded-sm transition-all duration-300 group overflow-hidden hover:-translate-y-2 hover:border-signal/80 hover:shadow-[0_16px_36px_-8px_rgba(79,124,255,0.22)] bg-ink-soft/40 backdrop-blur-sm">
                 <div>
                   {/* Project Image Banner */}
                   <div className="relative aspect-video w-full overflow-hidden bg-ink-soft border-b border-line">
@@ -80,20 +80,24 @@ export default function Projects({
                       <img
                         src={project.coverImageUrl}
                         alt={project.name}
-                        className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                       />
                     ) : (
                       <div className="h-full w-full flex items-center justify-center bg-paper/5 text-paper-dim">
                         <Code2 size={32} />
                       </div>
                     )}
+
+                    {/* Smooth hover gradient overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/25 to-transparent opacity-60 group-hover:opacity-85 transition-opacity duration-300 pointer-events-none" />
+
                     {/* Category & Status badges */}
                     <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
-                      <span className="bg-ink/85 backdrop-blur-md px-2.5 py-1 border border-line font-mono text-[9px] tracking-widest2 text-signal">
+                      <span className="bg-ink/90 backdrop-blur-md px-2.5 py-1 border border-line font-mono text-[9px] tracking-widest2 text-signal rounded-sm shadow-sm">
                         {project.category}
                       </span>
-                      <span className="bg-ink/85 backdrop-blur-md px-2.5 py-1 border border-line font-mono text-[9px] tracking-widest2 text-lime flex items-center gap-1.5">
-                        <span className="h-1.5 w-1.5 rounded-full bg-lime" />
+                      <span className="bg-ink/90 backdrop-blur-md px-2.5 py-1 border border-line font-mono text-[9px] tracking-widest2 text-lime flex items-center gap-1.5 rounded-sm shadow-sm">
+                        <span className="h-1.5 w-1.5 rounded-full bg-lime animate-blink" />
                         {project.status}
                       </span>
                     </div>
@@ -102,12 +106,12 @@ export default function Projects({
                   {/* Body Info */}
                   <div className="p-6">
                     <div className="flex items-baseline justify-between mb-2">
-                      <span className="font-mono text-xs text-signal font-semibold">
+                      <span className="font-mono text-xs text-signal font-semibold tracking-wider">
                         {project.index}
                       </span>
                     </div>
 
-                    <h3 className="font-display text-xl uppercase text-paper group-hover:text-signal transition-colors line-clamp-1">
+                    <h3 className="font-display text-xl uppercase text-paper transition-colors group-hover:text-signal line-clamp-1">
                       {project.name}
                     </h3>
 
@@ -120,13 +124,13 @@ export default function Projects({
                       {project.technology.slice(0, 5).map((tech) => (
                         <span
                           key={tech}
-                          className="border border-line bg-ink/40 px-2 py-0.5 font-mono text-[10px] text-paper-dim"
+                          className="border border-line bg-paper/[0.03] px-2 py-0.5 font-mono text-[10px] text-paper-dim hover:text-paper hover:border-signal/40 transition-colors rounded-sm"
                         >
                           {tech}
                         </span>
                       ))}
                       {project.technology.length > 5 && (
-                        <span className="border border-line bg-ink/40 px-2 py-0.5 font-mono text-[10px] text-paper-dim/60">
+                        <span className="border border-line bg-paper/[0.03] px-2 py-0.5 font-mono text-[10px] text-paper-dim/60 rounded-sm">
                           +{project.technology.length - 5}
                         </span>
                       )}
@@ -143,7 +147,7 @@ export default function Projects({
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label="GitHub Repository"
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1.5 border border-line text-paper-dim hover:text-paper hover:border-signal font-mono text-[10px] tracking-wider transition-colors"
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1.5 border border-line text-paper-dim hover:text-paper hover:border-signal hover:bg-paper/5 font-mono text-[10px] tracking-wider transition-all duration-200 rounded-sm hover:scale-105 active:scale-95"
                         title="GitHub Repository"
                       >
                         <Github size={12} />
@@ -156,7 +160,7 @@ export default function Projects({
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label="Live Demo"
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1.5 border border-line text-paper-dim hover:text-paper hover:border-signal font-mono text-[10px] tracking-wider transition-colors"
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1.5 border border-line text-paper-dim hover:text-paper hover:border-signal hover:bg-paper/5 font-mono text-[10px] tracking-wider transition-all duration-200 rounded-sm hover:scale-105 active:scale-95"
                         title="Live Demo"
                       >
                         <ExternalLink size={12} />
@@ -167,7 +171,7 @@ export default function Projects({
 
                   <Link
                     href={`/projects/${project.slug}`}
-                    className="inline-flex items-center gap-1.5 bg-paper/5 hover:bg-signal hover:text-white border border-line px-3 py-1.5 font-mono text-[10px] tracking-wider text-paper transition-all"
+                    className="inline-flex items-center gap-1.5 bg-paper/5 hover:bg-signal hover:text-white border border-line hover:border-signal px-3 py-1.5 font-mono text-[10px] tracking-wider text-paper transition-all duration-200 rounded-sm hover:scale-105 active:scale-95 hover:shadow-[0_0_12px_rgba(79,124,255,0.4)]"
                   >
                     <span>VIEW PROJECT</span>
                     <ArrowUpRight size={12} />

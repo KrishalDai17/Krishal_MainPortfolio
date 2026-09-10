@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 
 export default function CustomCursor() {
+  const pathname = usePathname();
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
   const [label, setLabel] = useState("");
@@ -75,7 +77,7 @@ export default function CustomCursor() {
     };
   }, []);
 
-  if (isTouch) return null;
+  if (isTouch || pathname?.startsWith("/admin")) return null;
 
   return (
     <>

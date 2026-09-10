@@ -43,15 +43,15 @@ export default function SkillMatrix({
         </Reveal>
 
         {/* Category Tabs */}
-        <Reveal delay={80}>
+        <Reveal delay={80} direction="up">
           <div className="mt-10 flex flex-wrap gap-2 border-b border-line pb-6">
             {skillCategories.map((c) => (
               <button
                 key={c.id}
                 onClick={() => setActive(c.id)}
-                className={`px-4 py-2.5 font-mono text-[11px] tracking-widest2 border transition-all ${
+                className={`px-4 py-2.5 font-mono text-[11px] tracking-widest2 border transition-all duration-200 rounded-sm hover:scale-[1.02] active:scale-[0.98] ${
                   active === c.id
-                    ? "bg-signal border-signal text-white shadow-md shadow-signal/20"
+                    ? "bg-signal border-signal text-white shadow-md shadow-signal/30"
                     : "border-line text-paper-dim hover:border-signal/60 hover:text-paper bg-paper/5"
                 }`}
               >
@@ -65,10 +65,10 @@ export default function SkillMatrix({
         {category && (
           <div
             key={active}
-            className="mt-12 grid grid-cols-1 lg:grid-cols-12 gap-10 animate-fade-up"
+            className="mt-12 grid grid-cols-1 lg:grid-cols-12 gap-10"
           >
-            <div className="lg:col-span-4">
-              <span className="font-mono text-xs text-signal font-semibold">
+            <Reveal direction="left" className="lg:col-span-4">
+              <span className="font-mono text-xs text-signal font-semibold tracking-wider">
                 {category.index}
               </span>
               <h3 className="mt-2 font-display text-2xl md:text-3xl uppercase text-paper">
@@ -77,13 +77,16 @@ export default function SkillMatrix({
               <p className="mt-3 text-sm text-paper-dim leading-relaxed">
                 Applied in production environments, academic research projects, and full-stack software development.
               </p>
-            </div>
+            </Reveal>
 
-            <div className="lg:col-span-8 space-y-8">
+            <Reveal direction="right" delay={100} className="lg:col-span-8 space-y-8">
               {category.groups.map((group) => (
-                <div key={group.label} className="border border-line/60 p-6 bg-paper/5">
+                <div
+                  key={group.label}
+                  className="border border-line/60 p-6 bg-paper/[0.03] rounded-sm transition-all duration-300 hover:border-signal/40 hover:bg-paper/[0.05] hover:shadow-[0_8px_24px_-6px_rgba(0,0,0,0.2)]"
+                >
                   <h4 className="font-mono text-[11px] tracking-widest2 text-paper-dim mb-4 flex items-center gap-2">
-                    <span className="h-1 w-1 rounded-full bg-signal" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-signal" />
                     {group.label.toUpperCase()}
                   </h4>
                   <div className="flex flex-wrap gap-2.5">
@@ -91,18 +94,20 @@ export default function SkillMatrix({
                       <span
                         key={item.name}
                         title={item.level}
-                        className="group inline-flex items-center gap-2 border border-line bg-ink/60 px-3.5 py-2 font-mono text-xs text-paper hover:border-signal transition-colors"
+                        className="group inline-flex items-center gap-2 border border-line bg-ink/60 px-3.5 py-2 font-mono text-xs text-paper hover:border-signal hover:shadow-[0_4px_16px_rgba(79,124,255,0.25)] hover:-translate-y-0.5 active:scale-95 transition-all duration-200 rounded-sm cursor-default"
                       >
                         <span
-                          className={`h-1.5 w-1.5 rounded-full ${levelDot[item.level]}`}
+                          className={`h-1.5 w-1.5 rounded-full transition-transform duration-200 group-hover:scale-150 ${levelDot[item.level]}`}
                         />
-                        {item.name}
+                        <span className="transition-colors group-hover:text-signal">
+                          {item.name}
+                        </span>
                       </span>
                     ))}
                   </div>
                 </div>
               ))}
-            </div>
+            </Reveal>
           </div>
         )}
 

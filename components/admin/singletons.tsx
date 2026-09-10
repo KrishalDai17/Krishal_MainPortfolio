@@ -39,13 +39,47 @@ function SaveBar({
   saved: boolean;
   error: string;
 }) {
+  const isSchemaError =
+    error.includes("schema cache") ||
+    error.includes("content_singletons") ||
+    error.includes("relation");
+
   return (
-    <div className="flex items-center gap-3 pt-4 border-t border-zinc-800">
-      <PrimaryButton type="submit" disabled={saving}>
-        {saving ? "Saving Changes…" : "Save Changes"}
-      </PrimaryButton>
-      {saved && <span className="text-xs text-emerald-400">✓ Changes saved successfully.</span>}
-      {error && <span className="text-xs text-red-400">{error}</span>}
+    <div className="space-y-3 pt-4 border-t border-zinc-800">
+      <div className="flex items-center gap-3">
+        <PrimaryButton type="submit" disabled={saving}>
+          {saving ? "Saving Changes…" : "Save Changes"}
+        </PrimaryButton>
+        {saved && <span className="text-xs text-emerald-400">✓ Changes saved successfully.</span>}
+        {error && !isSchemaError && <span className="text-xs text-red-400">{error}</span>}
+      </div>
+
+      {isSchemaError && (
+        <div className="p-4 bg-amber-500/10 border border-amber-500/30 rounded-md text-xs space-y-2 text-amber-200">
+          <p className="font-semibold text-amber-300 flex items-center gap-2">
+            <span>⚠️</span> Supabase Table &apos;content_singletons&apos; Not Created Yet
+          </p>
+          <p className="text-zinc-400 leading-relaxed">
+            Your Supabase project is connected, but the SQL tables have not been created yet in Postgres.
+            To enable database saving in 30 seconds:
+          </p>
+          <ol className="list-decimal list-inside space-y-1 text-zinc-300">
+            <li>Go to your <strong>Supabase Dashboard → SQL Editor</strong></li>
+            <li>Click <strong>New Query</strong></li>
+            <li>Paste and run the SQL below (or the full <code className="text-amber-300">supabase/schema.sql</code> file)</li>
+          </ol>
+          <pre className="p-3 bg-zinc-950 border border-zinc-800 rounded font-mono text-[11px] text-zinc-200 overflow-x-auto select-all">
+{`create table if not exists content_singletons (
+  key text primary key,
+  data jsonb not null default '{}'::jsonb,
+  updated_at timestamptz not null default now()
+);
+alter table content_singletons enable row level security;
+create policy "Allow public read" on content_singletons for select using (true);
+create policy "Allow auth write" on content_singletons for all to authenticated using (true) with check (true);`}
+          </pre>
+        </div>
+      )}
     </div>
   );
 }
@@ -350,13 +384,13 @@ export function SettingsForm({ initial }: { initial: any }) {
     initial.introEnabled ?? true
   );
   const [introDuration, setIntroDuration] = useState<number>(
-    initial.introDuration ?? 2.8
+    initial.introDuration ?? 2.2
   );
   const [introFrequency, setIntroFrequency] = useState<string>(
     initial.introFrequency ?? "once_per_session"
   );
   const [introImageUrl, setIntroImageUrl] = useState<string>(
-    initial.introImageUrl ?? "/images/nepali-mask-intro.jpg"
+    initial.introImageUrl ?? "/images/nepali-mask-light.jpg"
   );
   const { save, saving, saved, error } = useSingletonSave("settings");
 
@@ -369,7 +403,7 @@ export function SettingsForm({ initial }: { initial: any }) {
           availableForOpportunities: available,
           footerNote,
           introEnabled,
-          introDuration: Number(introDuration) || 2.8,
+          introDuration: Number(introDuration) || 2.2,
           introFrequency,
           introImageUrl,
         });
