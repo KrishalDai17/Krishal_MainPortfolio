@@ -16,23 +16,11 @@ export default function Reveal({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setTimeout(() => el.classList.add("is-visible"), delay);
-            observer.unobserve(el);
-          }
-        });
-      },
-      { threshold: 0.15 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [delay]);
+    el.classList.add("is-visible");
+  }, []);
 
   return (
-    <div ref={ref} className={`reveal ${className}`}>
+    <div ref={ref} className={`reveal is-visible ${className}`}>
       {children}
     </div>
   );

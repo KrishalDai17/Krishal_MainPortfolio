@@ -1,5 +1,9 @@
-import { Github, ArrowUpRight } from "lucide-react";
-import { projects as defaultProjects, Project } from "@/lib/data";
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { Github, ArrowUpRight, ExternalLink, Code2 } from "lucide-react";
+import { projects as defaultProjects, projectCategories, Project } from "@/lib/data";
 import Reveal from "./Reveal";
 
 export default function Projects({
@@ -7,67 +11,143 @@ export default function Projects({
 }: {
   projects?: Project[];
 } = {}) {
+  const [filter, setFilter] = useState("ALL");
+
+  const visibleProjects = projects.filter((p) => {
+    if (filter === "ALL") return true;
+    if (p.category?.toUpperCase() === filter) return true;
+    if (p.technology?.some((t) => t.toUpperCase() === filter)) return true;
+    return false;
+  });
+
   return (
-    <section id="projects" className="section-glow glow-blue-violet py-28 md:py-36 px-6 md:px-10 border-t border-line">
+    <section
+      id="projects"
+      className="section-glow glow-blue-violet py-28 md:py-36 px-6 md:px-10 border-t border-line"
+    >
       <div className="mx-auto max-w-7xl">
         <Reveal>
-          <span className="font-mono text-[11px] tracking-widest2 text-signal">03 — PROJECTS</span>
-          <h2 className="mt-4 font-display text-display-lg uppercase text-paper">Things I&apos;ve built.</h2>
-          <p className="mt-4 text-paper-dim max-w-xl">
-            From databases to mobile applications and authentication systems.
-          </p>
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div>
+              <span className="font-mono text-[11px] tracking-widest2 text-signal">
+                03 — FEATURED PROJECTS
+              </span>
+              <h2 className="mt-3 font-display text-display-lg uppercase text-paper">
+                Engineered Works.
+              </h2>
+              <p className="mt-3 text-paper-dim max-w-xl text-base">
+                Production-grade applications, database architectures, and cross-platform mobile solutions.
+              </p>
+            </div>
+            <Link
+              href="/projects"
+              className="inline-flex items-center gap-2 border border-line px-5 py-2.5 font-mono text-xs text-paper hover:border-signal transition-colors"
+            >
+              VIEW ALL PROJECTS <ArrowUpRight size={14} />
+            </Link>
+          </div>
         </Reveal>
 
-        <div className="mt-16 divide-y divide-line border-t border-line">
-          {projects.map((project, i) => (
-            <Reveal key={project.index} delay={i * 60}>
-              <div className="group py-14 grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-                <div className="lg:col-span-2">
-                  <span className="font-mono text-5xl text-paper-dim group-hover:text-signal transition-colors">
-                    {project.index}
-                  </span>
-                </div>
+        {/* Category Filters */}
+        <Reveal delay={80}>
+          <div className="mt-10 flex flex-wrap gap-2 border-b border-line pb-6">
+            {projectCategories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setFilter(cat)}
+                className={`px-3.5 py-1.5 font-mono text-[10px] tracking-widest2 border transition-all ${
+                  filter === cat
+                    ? "bg-signal border-signal text-white"
+                    : "border-line text-paper-dim hover:border-signal/60 hover:text-paper bg-paper/5"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        </Reveal>
 
-                <div className="lg:col-span-6">
-                  <h3 className="font-display text-3xl md:text-4xl uppercase text-paper group-hover:text-signal transition-colors">
-                    {project.name}
-                  </h3>
-                  <p className="mt-4 text-paper-dim leading-relaxed max-w-lg">{project.description}</p>
-
-                  <div className="mt-6 flex flex-wrap gap-2">
-                    {project.technology.map((tech) => (
-                      <span
-                        key={tech}
-                        className="border border-line px-2.5 py-1 font-mono text-[10px] tracking-widest2 text-paper-dim"
-                      >
-                        {tech}
+        {/* Projects Cards Grid */}
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {visibleProjects.map((project, i) => (
+            <Reveal key={project.slug || project.index} delay={i * 80}>
+              <div className="glass-panel h-full flex flex-col justify-between border border-line hover:border-signal/80 transition-all duration-300 group overflow-hidden">
+                <div>
+                  {/* Project Image Banner */}
+                  <div className="relative aspect-video w-full overflow-hidden bg-ink-soft border-b border-line">
+                    {project.coverImageUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={project.coverImageUrl}
+                        alt={project.name}
+                        className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="h-full w-full flex items-center justify-center bg-paper/5 text-paper-dim">
+                        <Code2 size={32} />
+                      </div>
+                    )}
+                    {/* Category & Status badges */}
+                    <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
+                      <span className="bg-ink/85 backdrop-blur-md px-2.5 py-1 border border-line font-mono text-[9px] tracking-widest2 text-signal">
+                        {project.category}
                       </span>
-                    ))}
+                      <span className="bg-ink/85 backdrop-blur-md px-2.5 py-1 border border-line font-mono text-[9px] tracking-widest2 text-lime flex items-center gap-1.5">
+                        <span className="h-1.5 w-1.5 rounded-full bg-lime" />
+                        {project.status}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Body Info */}
+                  <div className="p-6">
+                    <div className="flex items-baseline justify-between mb-2">
+                      <span className="font-mono text-xs text-signal font-semibold">
+                        {project.index}
+                      </span>
+                    </div>
+
+                    <h3 className="font-display text-xl uppercase text-paper group-hover:text-signal transition-colors line-clamp-1">
+                      {project.name}
+                    </h3>
+
+                    <p className="mt-3 text-sm text-paper-dim leading-relaxed line-clamp-3">
+                      {project.shortDescription || project.description}
+                    </p>
+
+                    {/* Technologies */}
+                    <div className="mt-5 flex flex-wrap gap-1.5">
+                      {project.technology.slice(0, 5).map((tech) => (
+                        <span
+                          key={tech}
+                          className="border border-line bg-ink/40 px-2 py-0.5 font-mono text-[10px] text-paper-dim"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                      {project.technology.length > 5 && (
+                        <span className="border border-line bg-ink/40 px-2 py-0.5 font-mono text-[10px] text-paper-dim/60">
+                          +{project.technology.length - 5}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
 
-                <div className="lg:col-span-4">
-                  <span className="font-mono text-[10px] tracking-widest2 text-paper-dim block mb-3">
-                    FEATURES
-                  </span>
-                  <ul className="space-y-1.5">
-                    {project.features.map((f) => (
-                      <li key={f} className="text-sm text-paper flex items-start gap-2">
-                        <span className="text-signal mt-1.5">—</span> {f}
-                      </li>
-                    ))}
-                  </ul>
-
-                  <div className="mt-6 flex items-center gap-4">
+                {/* Card Action Footer */}
+                <div className="p-6 pt-0 border-t border-line/40 mt-4 flex items-center justify-between gap-2 flex-wrap">
+                  <div className="flex items-center gap-2">
                     {project.github && (
                       <a
                         href={project.github}
                         target="_blank"
                         rel="noopener noreferrer"
-                        data-cursor="OPEN"
-                        className="inline-flex items-center gap-2 font-mono text-[11px] tracking-widest2 text-paper hover:text-signal transition-colors"
+                        aria-label="GitHub Repository"
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1.5 border border-line text-paper-dim hover:text-paper hover:border-signal font-mono text-[10px] tracking-wider transition-colors"
+                        title="GitHub Repository"
                       >
-                        <Github size={14} /> VIEW PROJECT
+                        <Github size={12} />
+                        <span>CODE</span>
                       </a>
                     )}
                     {project.demo && (
@@ -75,12 +155,23 @@ export default function Projects({
                         href={project.demo}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 font-mono text-[11px] tracking-widest2 text-paper hover:text-signal transition-colors"
+                        aria-label="Live Demo"
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1.5 border border-line text-paper-dim hover:text-paper hover:border-signal font-mono text-[10px] tracking-wider transition-colors"
+                        title="Live Demo"
                       >
-                        DEMO <ArrowUpRight size={14} />
+                        <ExternalLink size={12} />
+                        <span>DEMO</span>
                       </a>
                     )}
                   </div>
+
+                  <Link
+                    href={`/projects/${project.slug}`}
+                    className="inline-flex items-center gap-1.5 bg-paper/5 hover:bg-signal hover:text-white border border-line px-3 py-1.5 font-mono text-[10px] tracking-wider text-paper transition-all"
+                  >
+                    <span>VIEW PROJECT</span>
+                    <ArrowUpRight size={12} />
+                  </Link>
                 </div>
               </div>
             </Reveal>

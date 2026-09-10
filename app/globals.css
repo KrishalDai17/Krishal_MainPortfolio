@@ -46,10 +46,9 @@ html {
 body {
   background-color: rgb(var(--color-ink));
   color: rgb(var(--color-paper));
-  font-family: var(--font-inter);
+  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
-  transition: background-color 0.4s ease, color 0.4s ease;
   position: relative;
 }
 
@@ -105,6 +104,8 @@ html.light ::-webkit-scrollbar-thumb {
     radial-gradient(32% 26% at 25% 60%, rgb(34 211 238 / 0.08), transparent 70%),
     radial-gradient(36% 30% at 90% 85%, rgb(236 72 153 / 0.1), transparent 70%);
   filter: blur(10px);
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
   animation: drift 22s ease-in-out infinite;
 }
 html.light .app-bg::before {
@@ -151,6 +152,8 @@ html.light .app-bg::after {
     radial-gradient(36% 36% at 88% 80%, var(--glow-b), transparent 70%);
   filter: blur(70px);
   opacity: 0.7;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
   animation: drift 20s ease-in-out infinite;
 }
 html.light .section-glow::before {
@@ -169,17 +172,26 @@ html.light .section-glow::before {
 
 /* -------------------- Glass / technical panel cards -------------------- */
 .glass-panel {
-  background: rgb(var(--color-paper) / 0.03);
-  border: 1px solid rgb(var(--color-paper) / 0.1);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  transition: transform 0.35s cubic-bezier(0.16,1,0.3,1), border-color 0.35s ease, background 0.35s ease, box-shadow 0.35s ease;
+  background: rgb(var(--color-paper) / 0.025);
+  border: 1px solid rgb(var(--color-paper) / 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease, background-color 0.4s ease, box-shadow 0.4s ease;
 }
 .glass-panel:hover {
   transform: translateY(-4px);
   background: rgb(var(--color-paper) / 0.05);
-  border-color: rgb(79 124 255 / 0.45);
-  box-shadow: 0 16px 40px -12px rgb(79 124 255 / 0.25);
+  border-color: rgb(79 124 255 / 0.5);
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.35);
+}
+html.light .glass-panel {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+}
+html.light .glass-panel:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 16px 32px -8px rgba(59, 130, 246, 0.14);
 }
 
 /* -------------------- Custom cursor -------------------- */
@@ -222,15 +234,14 @@ html.light .section-glow::before {
 
 /* -------------------- Reveal on scroll -------------------- */
 .reveal {
-  opacity: 0;
-  transform: translateY(28px) scale(0.98);
-  filter: blur(6px);
-  transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1), filter 0.9s cubic-bezier(0.16,1,0.3,1);
+  opacity: 1;
+  transform: none;
+  filter: none;
 }
 .reveal.is-visible {
   opacity: 1;
-  transform: translateY(0) scale(1);
-  filter: blur(0);
+  transform: none;
+  filter: none;
 }
 
 /* -------------------- HUD corner brackets (signature element) -------------------- */
@@ -277,4 +288,63 @@ html.light .section-glow::before {
 .marquee-track {
   display: flex;
   width: max-content;
+}
+
+/* -------------------- Traditional Nepali Mask Intro Experience -------------------- */
+@keyframes maskCinematicAnimation {
+  0% {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+  58% {
+    opacity: 1;
+    transform: scale(1.00) translateY(-2px);
+  }
+  78% {
+    opacity: 1;
+    transform: scale(1.01) translateY(0);
+  }
+  88% {
+    opacity: 1;
+    transform: scale(1.00);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.00);
+  }
+}
+
+@keyframes maskCaptionFade {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  35% {
+    opacity: 0.85;
+    transform: translateY(0);
+  }
+  85% {
+    opacity: 0.85;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+.mask-cinematic-art {
+  animation-name: maskCinematicAnimation;
+  animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
+  animation-fill-mode: forwards;
+  will-change: transform, opacity;
+}
+
+.mask-subtle-caption {
+  animation: maskCaptionFade 2.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  will-change: transform, opacity;
 }

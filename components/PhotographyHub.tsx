@@ -2,64 +2,103 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Camera, X, ArrowUpRight, MapPin, Calendar, Compass } from "lucide-react";
-import {
-  photoCategories,
-  photoItems as defaultPhotoItems,
-  profile as defaultProfile,
-  PhotoItem,
-} from "@/lib/data";
-import Reveal from "./Reveal";
+import { Camera, X, MapPin, Calendar, ArrowUpRight, FolderHeart } from "lucide-react";
+import { PhotoItem, PhotographyAlbum, photoCategories } from "@/lib/data";
 
-export default function Photography({
-  photoItems = defaultPhotoItems,
-  profile = defaultProfile,
+export default function PhotographyHub({
+  albums,
+  photos,
 }: {
-  photoItems?: PhotoItem[];
-  profile?: typeof defaultProfile;
-} = {}) {
+  albums: PhotographyAlbum[];
+  photos: PhotoItem[];
+}) {
   const [filter, setFilter] = useState("ALL");
   const [activePhoto, setActivePhoto] = useState<PhotoItem | null>(null);
 
-  // Show featured photos or filtered
-  const featuredOnly = photoItems.filter((p) => p.featured !== false);
-  const visible = (filter === "ALL" ? featuredOnly : photoItems).filter((p) =>
-    filter === "ALL" ? true : p.category.toUpperCase() === filter
-  );
+  const visiblePhotos = photos.filter((p) => {
+    if (filter === "ALL") return true;
+    return p.category.toUpperCase() === filter;
+  });
 
   return (
-    <section
-      id="photography"
-      className="section-glow glow-pink-orange py-28 md:py-36 px-6 md:px-10 border-t border-line"
-    >
-      <div className="mx-auto max-w-7xl">
-        <Reveal>
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <div>
-              <span className="font-mono text-[11px] tracking-widest2 text-pink">
-                04 — PHOTOGRAPHY
-              </span>
-              <h2 className="mt-3 font-editorial text-display-lg uppercase text-paper">
-                Through My Lens.
-              </h2>
-              <p className="mt-3 font-serif italic text-orange text-xl md:text-2xl max-w-xl">
-                Technology solves problems. Creativity gives them meaning.
-              </p>
-            </div>
+    <div className="space-y-20">
+      {/* SECTION 1: PHOTOGRAPHY ALBUMS */}
+      <section>
+        <div className="flex items-center gap-2 font-mono text-xs text-pink tracking-widest2 mb-2">
+          <FolderHeart size={14} /> CURATED ALBUMS & PROJECTS
+        </div>
+        <h2 className="font-display text-3xl md:text-4xl uppercase text-paper">
+          Photo Collections
+        </h2>
+        <p className="mt-2 text-paper-dim text-sm max-w-xl">
+          Thematic visual narratives captured across Nepal, ranging from heritage street scenes to portraits and highland landscapes.
+        </p>
 
+        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {albums.map((album) => (
             <Link
-              href="/photography"
-              className="inline-flex items-center gap-2 border border-line bg-paper/5 px-6 py-3 font-mono text-xs text-paper hover:border-pink hover:text-pink transition-colors"
+              key={album.slug}
+              href={`/photography/${album.slug}`}
+              className="glass-panel group overflow-hidden border border-line hover:border-pink transition-all flex flex-col justify-between"
             >
-              VIEW ALL PHOTOGRAPHY <ArrowUpRight size={14} />
-            </Link>
-          </div>
-        </Reveal>
+              <div>
+                <div className="relative aspect-[16/10] overflow-hidden bg-ink-soft border-b border-line">
+                  {album.coverImageUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={album.coverImageUrl}
+                      alt={album.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-paper/5 text-paper-dim">
+                      <Camera size={32} />
+                    </div>
+                  )}
+                  <span className="absolute top-3 left-3 bg-ink/80 backdrop-blur-md px-2.5 py-1 border border-line font-mono text-[9px] tracking-widest2 text-pink">
+                    {album.category}
+                  </span>
+                </div>
 
-        {/* Category Filter Pills */}
-        <Reveal delay={80}>
-          <div className="mt-10 flex flex-wrap gap-2 border-b border-line pb-6">
-            {photoCategories.slice(0, 6).map((cat) => (
+                <div className="p-5">
+                  <h3 className="font-display text-xl uppercase text-paper group-hover:text-pink transition-colors">
+                    {album.title}
+                  </h3>
+                  <p className="mt-2 text-xs text-paper-dim line-clamp-2 leading-relaxed">
+                    {album.description}
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-5 pt-0 border-t border-line/40 mt-3 flex items-center justify-between font-mono text-[10px] text-paper-dim">
+                <span>VIEW ALBUM</span>
+                <span className="flex items-center gap-1 group-hover:text-pink transition-colors">
+                  OPEN <ArrowUpRight size={12} />
+                </span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* SECTION 2: COMPLETE GALLERY WITH CATEGORY FILTERS */}
+      <section className="border-t border-line pt-16">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+          <div>
+            <span className="font-mono text-xs text-pink tracking-widest2 block mb-2">
+              ALL FRAMES
+            </span>
+            <h2 className="font-display text-3xl md:text-4xl uppercase text-paper">
+              Master Gallery
+            </h2>
+            <p className="text-paper-dim text-sm mt-1 max-w-xl">
+              Filter photographs by discipline. Click any photograph to view high-resolution details in the lightbox.
+            </p>
+          </div>
+
+          {/* Filters */}
+          <div className="flex flex-wrap gap-2">
+            {photoCategories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setFilter(cat)}
@@ -73,15 +112,15 @@ export default function Photography({
               </button>
             ))}
           </div>
-        </Reveal>
+        </div>
 
-        {/* Masonry / Grid Gallery */}
-        <div className="mt-10 columns-1 sm:columns-2 lg:columns-3 gap-6 [column-fill:_balance]">
-          {visible.map((photo, i) => (
+        {/* Masonry Layout */}
+        <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 [column-fill:_balance]">
+          {visiblePhotos.map((photo, i) => (
             <button
               key={photo.id}
               onClick={() => setActivePhoto(photo)}
-              data-cursor="VIEW"
+              data-cursor="ZOOM"
               className="group relative w-full mb-6 break-inside-avoid border border-line hover:border-pink transition-all text-left overflow-hidden block bg-ink-soft"
             >
               <div
@@ -106,8 +145,7 @@ export default function Photography({
                     <span className="font-mono text-xs">{photo.title}</span>
                   </div>
                 )}
-                {/* Gradient vignette */}
-                <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5">
+                <div className="absolute inset-0 bg-gradient-to-t from-ink/95 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5">
                   <span className="font-mono text-[9px] tracking-widest2 text-pink font-semibold">
                     {photo.category}
                   </span>
@@ -124,32 +162,9 @@ export default function Photography({
             </button>
           ))}
         </div>
+      </section>
 
-        {/* Creative Section Teaser */}
-        <Reveal delay={100}>
-          <div className="mt-16 border border-line bg-paper/5 p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div>
-              <span className="font-mono text-xs text-pink tracking-widest2 block mb-1">
-                DISCIPLINE OVERVIEW
-              </span>
-              <h3 className="font-display text-2xl uppercase text-paper">
-                Visual Perspectives & Photographic Albums
-              </h3>
-              <p className="mt-2 text-paper-dim max-w-xl text-sm leading-relaxed">
-                Explore dedicated collections: Kathmandu street photography, portrait collections, festival coverage, and natural Himalayan landscapes.
-              </p>
-            </div>
-            <Link
-              href="/photography"
-              className="shrink-0 inline-flex items-center gap-2 bg-pink hover:bg-pink/90 text-white px-7 py-3.5 font-mono text-xs tracking-widest2 transition-colors shadow-lg shadow-pink/20"
-            >
-              <Compass size={14} /> EXPLORE PHOTO ALBUMS
-            </Link>
-          </div>
-        </Reveal>
-      </div>
-
-      {/* Lightbox Modal with Clean Metadata */}
+      {/* LIGHTBOX MODAL (NO UGLY FILENAMES!) */}
       {activePhoto && (
         <div
           className="fixed inset-0 z-[95] bg-ink/95 backdrop-blur-md flex items-center justify-center p-4 sm:p-6"
@@ -167,7 +182,7 @@ export default function Photography({
             className="hud-frame max-w-4xl max-h-[90vh] border border-line bg-ink flex flex-col md:flex-row overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Photo Visual */}
+            {/* Visual */}
             <div className="relative flex-1 min-h-[300px] md:min-h-[500px] bg-black flex items-center justify-center">
               {activePhoto.imageUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -181,7 +196,7 @@ export default function Photography({
               )}
             </div>
 
-            {/* Metadata Sidebar (no ugly file names!) */}
+            {/* Sidebar with pristine editorial metadata */}
             <div className="w-full md:w-80 p-6 flex flex-col justify-between border-t md:border-t-0 md:border-l border-line bg-ink-soft">
               <div>
                 <span className="font-mono text-[10px] tracking-widest2 text-pink font-semibold">
@@ -196,7 +211,7 @@ export default function Photography({
                   </p>
                 )}
 
-                <div className="mt-6 space-y-2 border-t border-line/50 pt-4 font-mono text-[11px] text-paper-dim">
+                <div className="mt-6 space-y-2.5 border-t border-line/50 pt-4 font-mono text-[11px] text-paper-dim">
                   {activePhoto.location && (
                     <div className="flex items-center gap-2">
                       <MapPin size={12} className="text-pink" />
@@ -207,6 +222,18 @@ export default function Photography({
                     <div className="flex items-center gap-2">
                       <Calendar size={12} className="text-pink" />
                       <span>Captured in {activePhoto.dateTaken}</span>
+                    </div>
+                  )}
+                  {activePhoto.albumSlug && (
+                    <div className="flex items-center gap-2 text-paper">
+                      <FolderHeart size={12} className="text-pink" />
+                      <Link
+                        href={`/photography/${activePhoto.albumSlug}`}
+                        className="hover:underline text-pink"
+                        onClick={() => setActivePhoto(null)}
+                      >
+                        Part of Album →
+                      </Link>
                     </div>
                   )}
                 </div>
@@ -227,6 +254,6 @@ export default function Photography({
           </div>
         </div>
       )}
-    </section>
+    </div>
   );
 }

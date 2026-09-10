@@ -1,64 +1,146 @@
 // ============================================================
-// SITE DATA — edit everything here. Nothing below needs touching
-// unless you're changing layout/behavior.
+// SITE DATA — Core data models & static fallback content.
+// Everything here matches the live site and database models.
 // ============================================================
 
-export const profile = {
+export interface ProfileLink {
+  github: string;
+  linkedin: string;
+  facebook: string;
+  instagram: string;
+  phone?: string;
+  email?: string;
+}
+
+export interface Profile {
+  name: string;
+  firstName: string;
+  lastName: string;
+  initials: string;
+  designation: string;
+  roles: string[];
+  location: string;
+  phone: string;
+  email: string;
+  avatarUrl?: string;
+  links: ProfileLink;
+  tagline: [string, string];
+  subTagline: string[];
+  supportingStatement: string;
+  heroSupport: string;
+  roleBadges: string[];
+  heroCtas: {
+    primary: { label: string; href: string };
+    secondary: { label: string; href: string };
+    github: { label: string; href: string };
+  };
+}
+
+export const profile: Profile = {
   name: "Krishal Shrestha",
   firstName: "Krishal",
   lastName: "Shrestha",
   initials: "KS.",
+  designation: "Software Developer · QA Engineer · IT Professional",
   roles: [
-    "Computer Engineering Undergraduate",
     "Software Developer",
-    "QA / Software Testing Enthusiast",
-    "Data & Digital Operations",
-    "Photographer",
-    "Videographer",
+    "QA Engineer",
+    "IT Professional",
+    "Creative Photographer",
   ],
   location: "Kathmandu, Nepal",
   phone: "9864029898",
   email: "krishalstha87@gmail.com",
+  avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
   links: {
     github: "https://github.com/KrishalDai17",
+    linkedin: "https://www.linkedin.com/in/krishal-shrestha",
     facebook: "https://www.facebook.com/unique.krishal.17",
     instagram: "https://www.instagram.com/only__krishal/",
-    linkedin: "", // [ADD LINKEDIN URL]
   },
   tagline: ["ENGINEER BY LOGIC.", "CREATOR BY VISION."],
   subTagline: ["BUILD.", "TEST.", "CREATE.", "CAPTURE."],
   supportingStatement:
     "Technology solves problems. Creativity gives them meaning.",
   heroSupport:
-    "Computer Engineering undergraduate building software, testing systems, working with data, and capturing stories through photography and videography.",
+    "Building useful digital experiences with logic, technology and creativity.",
+  roleBadges: [
+    "SOFTWARE DEVELOPER",
+    "FULL-STACK",
+    "DATABASE",
+    "UI/UX",
+    "CREATIVE PHOTOGRAPHER",
+  ],
+  heroCtas: {
+    primary: { label: "VIEW MY PROJECTS", href: "#projects" },
+    secondary: { label: "EXPLORE PHOTOGRAPHY", href: "/photography" },
+    github: { label: "GITHUB REPOSITORY", href: "https://github.com/KrishalDai17" },
+  },
 };
 
-export const roleBadges = [
-  "SOFTWARE DEVELOPER",
-  "QA / TESTING",
-  "DATA",
-  "UI/UX",
-  "PHOTOGRAPHER",
-  "VIDEOGRAPHER",
-];
-
+export const roleBadges = profile.roleBadges;
 export const hudCycle = ["BUILD", "TEST", "DATA", "DESIGN", "CAPTURE"];
 
-export const navLinks = [
-  { label: "HOME", href: "#home" },
-  { label: "ABOUT", href: "#about" },
-  { label: "SKILLS", href: "#skills" },
-  { label: "PROJECTS", href: "#projects" },
-  { label: "QA", href: "#qa" },
-  { label: "CREATIVE", href: "#creative" },
-  { label: "EDUCATION", href: "#education" },
-  { label: "CONTACT", href: "#contact" },
+export interface NavItem {
+  label: string;
+  href: string;
+}
+
+export const navLinks: NavItem[] = [
+  { label: "HOME", href: "/#home" },
+  { label: "ABOUT", href: "/#about" },
+  { label: "SKILLS", href: "/#skills" },
+  { label: "PROJECTS", href: "/#projects" },
+  { label: "PHOTOGRAPHY", href: "/photography" },
+  { label: "EDUCATION", href: "/#education" },
+  { label: "CONTACT", href: "/#contact" },
 ];
 
 export const aboutIntro = [
-  "I am a Computer Engineering undergraduate with practical experience in software development, software quality assurance, database systems, UI/UX, and digital operations.",
+  "I am a Computer Engineering undergraduate with practical experience in full-stack software development, database architecture, UI/UX design, and digital operations.",
   "Alongside technology, I work in photography and videography, which has strengthened my attention to detail, visual thinking, communication, and storytelling.",
   "I enjoy understanding how systems work, finding where they break, improving them, and creating experiences that people actually enjoy using.",
+];
+
+export const careerSummary =
+  "Driven by engineering precision and artistic curiosity, I bridge full-cycle software development with clean design and creative media production.";
+
+export const aboutHighlights = [
+  "Software Development",
+  "Full-Stack Web",
+  "Database Engineering",
+  "UI/UX Design",
+  "REST APIs",
+  "Creative Photography",
+];
+
+export interface WhatIDoItem {
+  title: string;
+  description: string;
+  category: string;
+}
+
+export const whatIDoItems: WhatIDoItem[] = [
+  {
+    title: "Software & Web Development",
+    description: "Building responsive, modern applications with clean architecture using JavaScript, TypeScript, Python, PHP, Next.js, and Node.js.",
+    category: "ENGINEERING",
+  },
+  {
+    title: "Database Modeling & Backend",
+    description: "Structuring relational databases in MySQL and PostgreSQL, writing queries, and building secure REST APIs.",
+    category: "DATA",
+  },
+  {
+    title: "UI/UX & Modern Frontend",
+    description: "Crafting intuitive, accessible, and fast user interfaces with Tailwind CSS, Figma, and component-driven architecture.",
+    category: "DESIGN",
+  },
+  {
+    title: "Creative Photography & Storytelling",
+    description: "Approaching problems with visual perspective through portrait, landscape, and street photography, capturing real moments with intent.",
+    category: "CREATIVE",
+  },
 ];
 
 export const identityCards = [
@@ -74,8 +156,8 @@ export const identityCards = [
   },
   {
     index: "03",
-    title: "TESTER",
-    description: "Finding problems before users do.",
+    title: "DESIGNER",
+    description: "Designing sleek, intuitive, and accessible user experiences.",
   },
   {
     index: "04",
@@ -125,123 +207,77 @@ const fam = (name: string): SkillItem => ({ name, level: "FAMILIAR" });
 
 export const skillCategories: SkillCategory[] = [
   {
-    id: "software",
-    tab: "SOFTWARE",
+    id: "programming",
+    tab: "PROGRAMMING",
     index: "01",
-    title: "SOFTWARE DEVELOPMENT",
+    title: "PROGRAMMING LANGUAGES",
     groups: [
       {
-        label: "Programming",
-        items: [exp("C"), exp("C++"), exp("JavaScript"), exp("TypeScript"), exp("Python"), work("PHP"), work("Dart")],
+        label: "Core Languages",
+        items: [
+          exp("C"),
+          exp("C++"),
+          work("Java"),
+          exp("JavaScript"),
+          exp("TypeScript"),
+          exp("Python"),
+          work("PHP"),
+          work("Dart"),
+        ],
       },
-      {
-        label: "Frameworks / Libraries",
-        items: [work("Flask"), work("Flutter"), work("Bootstrap"), work("Express.js")],
-      },
+    ],
+  },
+  {
+    id: "development",
+    tab: "DEVELOPMENT",
+    index: "02",
+    title: "SOFTWARE & WEB DEVELOPMENT",
+    groups: [
       {
         label: "Frontend",
-        items: [exp("HTML5"), exp("CSS3"), work("Bootstrap"), exp("Responsive Design"), exp("UI Components")],
-      },
-      {
-        label: "Backend",
-        items: [work("Node.js"), work("Express.js"), work("Flask"), exp("REST APIs")],
-      },
-    ],
-  },
-  {
-    id: "qa",
-    tab: "QA",
-    index: "02",
-    title: "QUALITY ASSURANCE",
-    groups: [
-      {
-        label: "Testing",
         items: [
-          exp("Manual Testing"),
-          exp("Functional Testing"),
-          exp("Regression Testing"),
-          exp("Smoke Testing"),
-          exp("Sanity Testing"),
-          work("API Testing"),
-          work("Postman"),
+          exp("HTML5"),
+          exp("CSS3"),
+          work("Bootstrap"),
+          exp("Responsive Design"),
+          exp("UI Components"),
         ],
       },
       {
-        label: "Process",
-        items: [exp("Test Case Design"), exp("Bug Reporting"), exp("SDLC"), exp("STLC"), work("Agile/Scrum")],
-      },
-      {
-        label: "Validation",
-        items: [work("Database Validation"), exp("Debugging")],
+        label: "Backend & Frameworks",
+        items: [
+          work("Flask"),
+          work("Node.js"),
+          work("Express.js"),
+          work("Flutter"),
+          exp("REST APIs"),
+        ],
       },
     ],
   },
   {
-    id: "data",
-    tab: "DATA",
+    id: "database",
+    tab: "DATABASE",
     index: "03",
-    title: "DATABASE & DATA",
+    title: "DATABASES & DATA MANAGEMENT",
     groups: [
       {
-        label: "Databases",
-        items: [work("PostgreSQL"), work("MySQL"), work("SQLite"), fam("MongoDB")],
+        label: "Database Systems",
+        items: [
+          work("MySQL"),
+          work("PostgreSQL"),
+          work("SQL"),
+          fam("MongoDB"),
+          work("SQLite"),
+        ],
       },
       {
-        label: "Operations",
+        label: "Data Operations",
         items: [
-          exp("CRUD"),
-          work("Database Validation"),
-          exp("Data Entry"),
+          exp("Database Validation"),
+          exp("CRUD Operations"),
           exp("Data Cleaning"),
           exp("Data Organization"),
-          exp("Spreadsheet Management"),
-          exp("Excel"),
-          exp("Documentation"),
-        ],
-      },
-    ],
-  },
-  {
-    id: "design",
-    tab: "DESIGN",
-    index: "04",
-    title: "UI/UX",
-    groups: [
-      {
-        label: "Tools & Practice",
-        items: [work("Figma"), exp("Canva"), exp("Responsive Design"), work("Wireframing"), exp("UI Components"), work("Visual Design")],
-      },
-    ],
-  },
-  {
-    id: "creative",
-    tab: "CREATIVE",
-    index: "05",
-    title: "CREATIVE MEDIA",
-    groups: [
-      {
-        label: "Photography",
-        items: [
-          exp("Portrait Photography"),
-          exp("Event Photography"),
-          work("Product Photography"),
-          exp("Landscape Photography"),
-          work("Street Photography"),
-          exp("Lifestyle Photography"),
-          exp("Composition"),
-          exp("Photo Editing"),
-        ],
-      },
-      {
-        label: "Videography",
-        items: [
-          exp("Event Videography"),
-          work("Cinematic Video"),
-          work("Short-form Video"),
-          work("Promotional Video"),
-          work("Video Composition"),
-          exp("Video Editing"),
-          exp("Storytelling"),
         ],
       },
     ],
@@ -249,82 +285,520 @@ export const skillCategories: SkillCategory[] = [
   {
     id: "tools",
     tab: "TOOLS",
-    index: "06",
-    title: "TOOLS",
+    index: "04",
+    title: "ENGINEERING TOOLS & WORKFLOW",
     groups: [
       {
-        label: "Everyday Toolkit",
-        items: [exp("Git"), exp("GitHub"), exp("VS Code"), work("Postman"), work("Figma"), exp("Canva"), exp("Microsoft Excel")],
+        label: "Productivity & Version Control",
+        items: [
+          exp("Git"),
+          exp("GitHub"),
+          exp("VS Code"),
+          work("Postman"),
+          work("Jira"),
+          exp("Microsoft Excel"),
+        ],
+      },
+    ],
+  },
+  {
+    id: "design",
+    tab: "DESIGN",
+    index: "05",
+    title: "UI/UX & DESIGN",
+    groups: [
+      {
+        label: "Design Systems & Prototyping",
+        items: [
+          work("Figma"),
+          exp("UI/UX Principles"),
+          exp("Responsive Design"),
+          exp("Wireframing"),
+          exp("Canva"),
+        ],
+      },
+    ],
+  },
+  {
+    id: "creative",
+    tab: "CREATIVE MEDIA",
+    index: "06",
+    title: "PHOTOGRAPHY & VISUAL STORYTELLING",
+    groups: [
+      {
+        label: "Photography",
+        items: [
+          exp("Portrait Photography"),
+          exp("Event Photography"),
+          exp("Landscape Photography"),
+          work("Street Photography"),
+          exp("Composition & Lighting"),
+          exp("Photo Editing (Lightroom)"),
+        ],
+      },
+      {
+        label: "Motion & Videography",
+        items: [
+          exp("Event Videography"),
+          work("Cinematic Framing"),
+          work("Video Editing"),
+        ],
       },
     ],
   },
 ];
 
 // ------------------------------------------------------------
-// PROJECTS
+// PROJECTS — Rich portfolio projects
 // ------------------------------------------------------------
 export interface Project {
+  id?: string;
   index: string;
   name: string;
-  technology: string[];
+  slug: string;
+  category: string;
+  status: "COMPLETED" | "ACTIVE" | "IN PROGRESS";
+  featured: boolean;
+  shortDescription: string;
   description: string;
+  overview: string;
+  problem: string;
+  solution: string;
   features: string[];
+  technicalImplementation: string;
+  myContribution: string;
+  challenges: string;
+  challengesSolutions: string;
+  technology: string[];
   github?: string;
   demo?: string;
   coverImageUrl?: string;
+  screenshots: string[];
 }
+
+export const projectCategories = [
+  "ALL",
+  "WEB",
+  "MOBILE",
+  "E-COMMERCE",
+  "DATABASE",
+];
 
 export const projects: Project[] = [
   {
     index: "01",
-    name: "LIBRARY MANAGEMENT SYSTEM",
-    technology: ["PHP", "MySQL", "HTML", "CSS", "JavaScript"],
+    name: "DD MART",
+    slug: "dd-mart",
+    category: "WEB",
+    status: "COMPLETED",
+    featured: true,
+    shortDescription:
+      "Modern retail & grocery e-commerce platform designed with real-time cart management, categorized product catalog, and seamless checkout operations.",
     description:
-      "Database-driven library management system designed to simplify book management and student library operations.",
+      "A full-featured digital retail web application built to streamline grocery shopping and supermarket operations. Featuring responsive product browsing, dynamic inventory status, search filtering, and orders management.",
+    overview:
+      "DD Mart is an intuitive e-commerce web platform engineered for modern retail convenience. Designed with a mobile-first philosophy, it enables customers to browse diverse grocery categories, manage active cart items, and complete orders while providing store administrators with an organized inventory management dashboard.",
+    problem:
+      "Traditional neighborhood retail supermarkets face challenges managing fast-moving stock, keeping inventory counts synchronized, and providing a fast, effortless digital ordering experience for local customers.",
+    solution:
+      "Engineered a responsive e-commerce web platform featuring an interactive product catalog with search and category filters, local state cart management, order submission pipeline, and an administrative inventory control system.",
     features: [
-      "Book issuing",
-      "Book returning",
-      "Student registration",
-      "Book search",
-      "CRUD operations",
-      "Database management",
+      "Categorized Grocery & Household Product Catalog",
+      "Real-Time Shopping Cart with Dynamic Quantity Controls",
+      "Instant Search with Multi-Category Filtering",
+      "Streamlined Order Placement & Checkout Workflow",
+      "Admin Inventory & Price Management Dashboard",
+      "Fully Responsive Mobile-First Interface",
     ],
-    github: "https://github.com/KrishalDai17",
+    technicalImplementation:
+      "Developed with modern web technologies, modular component architecture, responsive Tailwind styling, REST API integrations, and robust database models for products, categories, and orders.",
+    myContribution:
+      "Full-stack developer responsible for UI/UX interface design, state management implementation for the cart, backend CRUD endpoints, and database schema structuring.",
+    challenges:
+      "Maintaining cart state consistency across page refreshes and ensuring rapid load times for high-resolution product imagery.",
+    challengesSolutions:
+      "Utilized persistent local storage synchronization for cart data and implemented lazy-loaded, CDN-optimized image delivery.",
+    technology: [
+      "React",
+      "Next.js",
+      "JavaScript",
+      "Tailwind CSS",
+      "Node.js",
+      "MySQL",
+    ],
+    github: "https://github.com/KrishalDai17/DD-Mart",
+    demo: "https://github.com/KrishalDai17/DD-Mart",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=1200&q=80",
+    screenshots: [
+      "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1000&q=80",
+      "https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&w=1000&q=80",
+    ],
   },
   {
     index: "02",
     name: "CNP EXPLORE",
-    technology: ["Flutter", "Dart"],
+    slug: "cnp-explore",
+    category: "MOBILE",
+    status: "COMPLETED",
+    featured: true,
+    shortDescription:
+      "Cross-platform mobile application engineered to provide an interactive exploration experience for Chitwan National Park visitors and wildlife enthusiasts.",
     description:
-      "Cross-platform mobile application designed to provide an interactive exploration experience.",
+      "A cross-platform mobile application providing comprehensive tourism guidance, interactive biodiversity maps, safari booking information, and wildlife identification guides.",
+    overview:
+      "CNP Explore delivers an offline-friendly, high-performance mobile companion for visitors exploring Chitwan National Park, showcasing fauna, flora, cultural trails, and emergency contact directories.",
+    problem:
+      "Tourists and researchers exploring the national park frequently face low cellular connectivity and struggle to find reliable, centralized information on wildlife sightings, trail routes, and safety guidelines.",
+    solution:
+      "Engineered a Flutter mobile application with responsive state management, offline caching for essential directories, and an intuitive UI optimized for both budget Android smartphones and iOS devices.",
     features: [
-      "Responsive mobile interface",
-      "Application navigation",
-      "User interaction",
-      "Android optimization",
+      "Interactive Biodiversity & Wildlife Species Guide",
+      "Offline Caching of Safety Guidelines & Key Contact Directories",
+      "Safari Itinerary & Route Exploration",
+      "Responsive Touch-Optimized Layouts across all screen densities",
+      "Interactive Media Gallery showcasing park flora & fauna",
     ],
-    github: "https://github.com/KrishalDai17",
+    technicalImplementation:
+      "Built using Flutter SDK and Dart, leveraging provider-based state management, custom vector graphics, caching layers for network media, and localized navigation stacks.",
+    myContribution:
+      "Designed UI/UX mockups, built client-side Flutter components, implemented mobile layout responsiveness, and verified cross-device performance.",
+    challenges:
+      "Ensuring smooth 60fps scrolling and rapid image rendering on low-spec mobile devices with constrained memory.",
+    challengesSolutions:
+      "Utilized Flutter cached network image caching strategies and memoized list item builders to minimize garbage collection pauses.",
+    technology: ["Flutter", "Dart", "Android", "iOS", "Mobile UI/UX"],
+    github: "https://github.com/KrishalDai17/CNP-Explore",
+    demo: "https://github.com/KrishalDai17/CNP-Explore",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1200&q=80",
+    screenshots: [
+      "https://images.unsplash.com/photo-1549366021-9f761d450615?auto=format&fit=crop&w=1000&q=80",
+      "https://images.unsplash.com/photo-1534567153574-2b12153a87f0?auto=format&fit=crop&w=1000&q=80",
+    ],
   },
   {
     index: "03",
     name: "SIGNUP AUTHENTICATION SYSTEM",
-    technology: ["JavaScript", "Node.js", "MongoDB", "Bcrypt", "ShadCN UI"],
+    slug: "signup-authentication-system",
+    category: "WEB",
+    status: "COMPLETED",
+    featured: true,
+    shortDescription:
+      "Production-grade authentication engine featuring salted Bcrypt password hashing, session tokens, validation middleware, and accessible ShadCN UI.",
     description:
-      "Secure authentication system with registration, login, password protection and responsive user interfaces.",
+      "A secure authentication system implementing rigorous user registration, cryptographic password hashing, role-based session controls, and modern UI components.",
+    overview:
+      "Engineered as a reusable security foundation for modern web applications, this project focuses on preventing OWASP authentication vulnerabilities, implementing strict password complexity validation, and delivering a modern user interface.",
+    problem:
+      "Many web applications suffer from insecure authentication pipelines, exposing plain credentials, vulnerable endpoints, and poorly sanitized forms.",
+    solution:
+      "Implemented multi-layered validation middleware, bcrypt salted hashing (12 salt rounds), secure token handling, and clear feedback states built on accessible ShadCN and Tailwind components.",
     features: [
-      "User registration",
-      "Login",
-      "Password hashing",
-      "Bcrypt",
-      "Form validation",
-      "Responsive authentication UI",
+      "Cryptographic Password Hashing with Bcrypt and Salt Rounds",
+      "Comprehensive Client & Server-side Form Validation",
+      "Protected Routes and Authentication Middleware",
+      "User Session Management & Secure Token Handlers",
+      "Accessible, Modern UI with ShadCN / Tailwind styling",
     ],
-    github: "https://github.com/KrishalDai17",
+    technicalImplementation:
+      "Developed with Node.js, Express, MongoDB/Mongoose, Bcrypt, and modern React/Next.js frontend with Tailwind CSS and Radix/ShadCN UI primitives.",
+    myContribution:
+      "Architected the backend security validation middleware, configured database schema indices, and integrated responsive authentication views.",
+    challenges:
+      "Handling brute-force login attempts and preventing timing attacks on password verification.",
+    challengesSolutions:
+      "Implemented constant-time cryptographic comparisons and rate-limiting middleware to throttle repeated failed attempts.",
+    technology: [
+      "JavaScript",
+      "Node.js",
+      "Express.js",
+      "MongoDB",
+      "Bcrypt",
+      "Tailwind CSS",
+      "ShadCN UI",
+    ],
+    github: "https://github.com/KrishalDai17/Signup-Authentication-System",
+    demo: "https://github.com/KrishalDai17/Signup-Authentication-System",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?auto=format&fit=crop&w=1200&q=80",
+    screenshots: [
+      "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1000&q=80",
+    ],
   },
 ];
 
 // ------------------------------------------------------------
-// QA SECTION
+// PHOTOGRAPHY ALBUMS & GALLERY
+// ------------------------------------------------------------
+export interface PhotographyAlbum {
+  id?: string;
+  title: string;
+  slug: string;
+  category: string;
+  description: string;
+  coverImageUrl: string;
+  photoCount?: number;
+}
+
+export const photographyAlbums: PhotographyAlbum[] = [
+  {
+    title: "Kathmandu Street Photography",
+    slug: "kathmandu-street-photography",
+    category: "STREET",
+    description:
+      "Candid moments, historic alleyways, and living culture across the historic courtyards and vibrant streets of Kathmandu Valley.",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=80",
+    photoCount: 8,
+  },
+  {
+    title: "Portrait Collection",
+    slug: "portrait-collection",
+    category: "PORTRAITS",
+    description:
+      "Character-driven portraiture focusing on authentic expressions, natural lighting, and emotional connection.",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80",
+    photoCount: 6,
+  },
+  {
+    title: "Event Photography",
+    slug: "event-photography",
+    category: "EVENTS",
+    description:
+      "Dynamic visual documentary of celebrations, collegiate festivals, conferences, and ceremonial gatherings.",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1200&q=80",
+    photoCount: 7,
+  },
+  {
+    title: "Travel & Landscapes",
+    slug: "travel-and-landscapes",
+    category: "LANDSCAPES",
+    description:
+      "Breathtaking vistas, Himalayan horizons, and serene natural terrain across Nepal's diverse topography.",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80",
+    photoCount: 6,
+  },
+  {
+    title: "Creative Portraits & Concepts",
+    slug: "creative-portraits",
+    category: "PORTRAITS",
+    description:
+      "Conceptual lighting, cinematic mood, and experimental framing exploring visual perspectives beyond the conventional.",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1200&q=80",
+    photoCount: 5,
+  },
+];
+
+export interface PhotoItem {
+  id: string;
+  title: string;
+  category: string;
+  albumSlug?: string;
+  description: string;
+  location?: string;
+  dateTaken?: string;
+  imageUrl?: string;
+  altText?: string;
+  featured?: boolean;
+}
+
+export const photoCategories = [
+  "ALL",
+  "PORTRAITS",
+  "EVENTS",
+  "LANDSCAPES",
+  "STREET",
+  "LIFESTYLE",
+  "PRODUCTS",
+];
+
+export const photoItems: PhotoItem[] = [
+  {
+    id: "p1",
+    title: "Morning Light at Bhaktapur",
+    category: "STREET",
+    albumSlug: "kathmandu-street-photography",
+    description: "Golden hour illumination piercing through heritage alleyways in historic Bhaktapur.",
+    location: "Bhaktapur Durbar Square",
+    dateTaken: "2024",
+    imageUrl: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1000&q=80",
+    altText: "Historic Kathmandu street in morning light",
+    featured: true,
+  },
+  {
+    id: "p2",
+    title: "Soul of the Artisan",
+    category: "PORTRAITS",
+    albumSlug: "portrait-collection",
+    description: "Candid portrait capturing an elderly potter crafting clay vessels at pottery square.",
+    location: "Pottery Square, Bhaktapur",
+    dateTaken: "2024",
+    imageUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1000&q=80",
+    altText: "Portrait of an artisan",
+    featured: true,
+  },
+  {
+    id: "p3",
+    title: "Himalayan Ridge at Dawn",
+    category: "LANDSCAPES",
+    albumSlug: "travel-and-landscapes",
+    description: "Panoramic mountain ridges kissed by the first alpine rays of sunrise.",
+    location: "Nagarkot, Nepal",
+    dateTaken: "2023",
+    imageUrl: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1000&q=80",
+    altText: "Himalayan dawn landscape",
+    featured: true,
+  },
+  {
+    id: "p4",
+    title: "Festival of Lights & Motion",
+    category: "EVENTS",
+    albumSlug: "event-photography",
+    description: "Vibrant energy and cultural celebrations during evening festivities.",
+    location: "Kathmandu Valley",
+    dateTaken: "2023",
+    imageUrl: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1000&q=80",
+    altText: "Event festivities celebration",
+    featured: true,
+  },
+  {
+    id: "p5",
+    title: "Quiet Solitude",
+    category: "PORTRAITS",
+    albumSlug: "creative-portraits",
+    description: "Cinematic portrait playing with dramatic shadows and minimalist focus.",
+    location: "Studio Kathmandu",
+    dateTaken: "2024",
+    imageUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=80",
+    altText: "Creative portrait session",
+    featured: true,
+  },
+  {
+    id: "p6",
+    title: "Patan Twilight Reverie",
+    category: "STREET",
+    albumSlug: "kathmandu-street-photography",
+    description: "Patan Durbar Square architectural symmetry bathed in blue hour twilight.",
+    location: "Patan, Lalitpur",
+    dateTaken: "2024",
+    imageUrl: "https://images.unsplash.com/photo-1514565131-fce0801e5785?auto=format&fit=crop&w=1000&q=80",
+    altText: "Patan evening architecture",
+    featured: true,
+  },
+  {
+    id: "p7",
+    title: "Urban Rhythm & Commute",
+    category: "LIFESTYLE",
+    albumSlug: "kathmandu-street-photography",
+    description: "Daily city life and quiet moments along the urban avenues.",
+    location: "Kathmandu",
+    dateTaken: "2024",
+    imageUrl: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1000&q=80",
+    altText: "Urban lifestyle commute",
+    featured: false,
+  },
+  {
+    id: "p8",
+    title: "Misty Pine Forest",
+    category: "LANDSCAPES",
+    albumSlug: "travel-and-landscapes",
+    description: "Ethereal fog blanketing the highland pine ridges after monsoon rains.",
+    location: "Shivapuri National Park",
+    dateTaken: "2023",
+    imageUrl: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1000&q=80",
+    altText: "Misty pine forest landscape",
+    featured: false,
+  },
+];
+
+// ------------------------------------------------------------
+// EDUCATION
+// ------------------------------------------------------------
+export interface EducationItem {
+  period: string;
+  institution: string;
+  program: string;
+  location: string;
+  description?: string;
+}
+
+export const education: EducationItem[] = [
+  {
+    period: "2022 — PRESENT",
+    institution: "National College of Engineering",
+    program: "Bachelor of Computer Engineering",
+    location: "Satdobato, Lalitpur",
+    description:
+      "Rigorous coursework in Data Structures, Algorithms, Software Engineering, Database Systems, and Computer Networks.",
+  },
+  {
+    period: "2020 — 2022",
+    institution: "Khwopa Secondary School",
+    program: "Higher Secondary Education (+2 Science)",
+    location: "Bhaktapur",
+    description:
+      "Focus on Physics, Mathematics, and Computer Science fundamentals, building analytical reasoning and problem-solving skills.",
+  },
+];
+
+// ------------------------------------------------------------
+// PHILOSOPHY
+// ------------------------------------------------------------
+export const philosophyWords = [
+  "BUILD IT.",
+  "TEST IT.",
+  "REFINE IT.",
+  "CAPTURE IT.",
+];
+
+export const philosophyStatement =
+  "Whether I am developing software, organizing data, designing an interface, or capturing a moment, I focus on detail, usability and continuous improvement.";
+
+// ------------------------------------------------------------
+// SOCIAL LINKS
+// ------------------------------------------------------------
+export const socialCards = [
+  {
+    key: "github",
+    label: "GITHUB",
+    tagline: "Code I build & open source repositories.",
+    handle: "@KrishalDai17",
+    url: profile.links.github,
+    cta: "VIEW GITHUB",
+  },
+  {
+    key: "linkedin",
+    label: "LINKEDIN",
+    tagline: "Professional journey & engineering connect.",
+    handle: "Krishal Shrestha",
+    url: profile.links.linkedin,
+    cta: "CONNECT ON LINKEDIN",
+  },
+  {
+    key: "instagram",
+    label: "INSTAGRAM",
+    tagline: "Frames I capture through my lens.",
+    handle: "@only__krishal",
+    url: profile.links.instagram,
+    cta: "VIEW INSTAGRAM",
+  },
+  {
+    key: "facebook",
+    label: "FACEBOOK",
+    tagline: "Updates, collaborations and moments.",
+    handle: "Krishal Shrestha",
+    url: profile.links.facebook,
+    cta: "VIEW FACEBOOK",
+  },
+];
+
+// ------------------------------------------------------------
+// CMS Fallbacks for Admin & Secondary Features
 // ------------------------------------------------------------
 export const qaWorkflow = [
   "REQUIREMENTS",
@@ -347,11 +821,35 @@ export const qaCards = [
   "SANITY TESTING",
 ];
 
-export const qaTools = ["POSTMAN", "GIT", "GITHUB", "SQL", "EXCEL"];
+export const qaTools = ["POSTMAN", "GIT", "GITHUB", "SQL", "JIRA", "EXCEL"];
 
-// ------------------------------------------------------------
-// DATA & DIGITAL OPERATIONS
-// ------------------------------------------------------------
+export interface QAProject {
+  id?: string;
+  title: string;
+  project: string;
+  testingType: string;
+  tools: string[];
+  testCases: string;
+  bugReports: string;
+  apiTesting: string;
+  databaseTesting: string;
+  result: string;
+}
+
+export const qaProjects: QAProject[] = [];
+
+export interface ExperienceItem {
+  id?: string;
+  company: string;
+  position: string;
+  period: string;
+  description: string;
+  responsibilities: string[];
+  technologies: string[];
+}
+
+export const experience: ExperienceItem[] = [];
+
 export const dataCapabilities = [
   "DATA ENTRY",
   "DATA ORGANIZATION",
@@ -359,48 +857,15 @@ export const dataCapabilities = [
   "EXCEL",
   "DATABASE MANAGEMENT",
   "DATABASE VALIDATION",
-  "DOCUMENTATION",
-  "INFORMATION MANAGEMENT",
-  "ACCURACY CHECKING",
 ];
 
-export const dataFlow = ["DATA ENTRY", "DATA ORGANIZATION", "DATABASE", "VALIDATION"];
-
-// ------------------------------------------------------------
-// PHOTOGRAPHY
-// ------------------------------------------------------------
-export interface PhotoItem {
-  id: string;
-  title: string;
-  category: string;
-  description: string;
-  imageUrl?: string;
-  altText?: string;
-}
-
-export const photoCategories = [
-  "PORTRAITS",
-  "EVENTS",
-  "LANDSCAPES",
-  "PRODUCTS",
-  "STREET",
-  "LIFESTYLE",
+export const dataFlow = [
+  "DATA ENTRY",
+  "DATA ORGANIZATION",
+  "DATABASE",
+  "VALIDATION",
 ];
 
-export const photoItems: PhotoItem[] = [
-  { id: "p1", title: "[ADD IMAGE]", category: "PORTRAITS", description: "[ADD DESCRIPTION]" },
-  { id: "p2", title: "[ADD IMAGE]", category: "EVENTS", description: "[ADD DESCRIPTION]" },
-  { id: "p3", title: "[ADD IMAGE]", category: "LANDSCAPES", description: "[ADD DESCRIPTION]" },
-  { id: "p4", title: "[ADD IMAGE]", category: "PRODUCTS", description: "[ADD DESCRIPTION]" },
-  { id: "p5", title: "[ADD IMAGE]", category: "STREET", description: "[ADD DESCRIPTION]" },
-  { id: "p6", title: "[ADD IMAGE]", category: "LIFESTYLE", description: "[ADD DESCRIPTION]" },
-  { id: "p7", title: "[ADD IMAGE]", category: "PORTRAITS", description: "[ADD DESCRIPTION]" },
-  { id: "p8", title: "[ADD IMAGE]", category: "EVENTS", description: "[ADD DESCRIPTION]" },
-];
-
-// ------------------------------------------------------------
-// VIDEOGRAPHY
-// ------------------------------------------------------------
 export interface VideoItem {
   id: string;
   title: string;
@@ -410,103 +875,45 @@ export interface VideoItem {
   videoUrl?: string;
 }
 
-export const videoCategories = ["EVENTS", "CINEMATIC", "SHORT FORM", "PROMOTIONAL", "TRAVEL"];
+export const videoItems: VideoItem[] = [];
 
-export const videoItems: VideoItem[] = [
-  { id: "v1", title: "[ADD PROJECT]", category: "EVENTS", description: "[ADD DESCRIPTION]" },
-  { id: "v2", title: "[ADD PROJECT]", category: "CINEMATIC", description: "[ADD DESCRIPTION]" },
-  { id: "v3", title: "[ADD PROJECT]", category: "SHORT FORM", description: "[ADD DESCRIPTION]" },
-  { id: "v4", title: "[ADD PROJECT]", category: "PROMOTIONAL", description: "[ADD DESCRIPTION]" },
-];
-
-// ------------------------------------------------------------
-// EDUCATION
-// ------------------------------------------------------------
-export const education = [
-  {
-    period: "2022 — PRESENT",
-    institution: "National College of Engineering",
-    program: "Bachelor of Computer Engineering",
-    location: "Satdobato, Lalitpur",
-  },
-  {
-    period: "2020 — 2022",
-    institution: "Khwopa Secondary School",
-    program: "Higher Secondary Education (+2 Science)",
-    location: "Bhaktapur",
-  },
-];
-
-// ------------------------------------------------------------
-// CURRENT LEARNING
-// ------------------------------------------------------------
 export type LearningStage = "EXPLORING" | "LEARNING" | "BUILDING";
 
-export const currentLearning: { name: string; stage: LearningStage }[] = [
-  { name: "AI / MACHINE LEARNING", stage: "EXPLORING" },
-  { name: "FULL-STACK DEVELOPMENT", stage: "BUILDING" },
-  { name: "CLOUD TECHNOLOGIES", stage: "LEARNING" },
-  { name: "ADVANCED SOFTWARE TESTING", stage: "BUILDING" },
-  { name: "SYSTEM DESIGN", stage: "LEARNING" },
-  { name: "MOBILE DEVELOPMENT", stage: "BUILDING" },
-];
+export const currentLearning: { name: string; stage: LearningStage }[] = [];
 
-// ------------------------------------------------------------
-// PROFESSIONAL PROFILE
-// ------------------------------------------------------------
 export const contributions = [
-  { title: "SOFTWARE DEVELOPMENT", description: "Build responsive and functional applications." },
-  { title: "QUALITY ASSURANCE", description: "Design tests and identify software issues." },
-  { title: "API TESTING", description: "Validate backend services and API behavior." },
-  { title: "DATABASE", description: "Work with SQL and NoSQL databases." },
-  { title: "DATA OPERATIONS", description: "Accurate data entry, organization and validation." },
-  { title: "UI/UX", description: "Create practical and responsive interfaces." },
-  { title: "PHOTOGRAPHY", description: "Capture professional and creative visual content." },
-  { title: "VIDEOGRAPHY", description: "Create visual stories through motion." },
-];
-
-// ------------------------------------------------------------
-// PHILOSOPHY
-// ------------------------------------------------------------
-export const philosophyWords = ["BUILD IT.", "BREAK IT.", "TEST IT.", "IMPROVE IT.", "CAPTURE IT."];
-
-export const philosophyStatement =
-  "Whether I am developing software, testing an application, organizing data, designing an interface, or capturing a moment, I focus on detail, usability and continuous improvement.";
-
-// ------------------------------------------------------------
-// SOCIAL
-// ------------------------------------------------------------
-export const socialCards = [
   {
-    key: "github",
-    label: "GITHUB",
-    tagline: "Code I build.",
-    handle: "@KrishalDai17",
-    url: profile.links.github,
-    cta: "VIEW GITHUB",
+    title: "SOFTWARE DEVELOPMENT",
+    description: "Building responsive, modern applications with clean architecture.",
   },
   {
-    key: "instagram",
-    label: "INSTAGRAM",
-    tagline: "Frames I capture.",
-    handle: "@only__krishal",
-    url: profile.links.instagram,
-    cta: "VIEW INSTAGRAM",
+    title: "DATABASE & API",
+    description: "Structuring schemas and integrating secure endpoints.",
   },
   {
-    key: "facebook",
-    label: "FACEBOOK",
-    tagline: "Updates and moments.",
-    handle: "",
-    url: profile.links.facebook,
-    cta: "VIEW FACEBOOK",
+    title: "UI/UX DESIGN",
+    description: "Designing sleek, accessible user experiences in Figma.",
   },
   {
-    key: "linkedin",
-    label: "LINKEDIN",
-    tagline: "Professional journey.",
-    handle: "",
-    url: profile.links.linkedin || "[ADD LINKEDIN URL]",
-    cta: "VIEW LINKEDIN",
+    title: "PHOTOGRAPHY",
+    description: "Capturing authentic visual moments through intentional framing.",
   },
 ];
+
+export interface SiteSettings {
+  availableForOpportunities: boolean;
+  footerNote: string;
+  introEnabled: boolean;
+  introDuration: number;
+  introFrequency: "once_per_session" | "always";
+  introImageUrl: string;
+}
+
+export const siteSettings: SiteSettings = {
+  availableForOpportunities: true,
+  footerNote: `© 2026 ${profile.name}. All rights reserved.`,
+  introEnabled: true,
+  introDuration: 2.8,
+  introFrequency: "once_per_session",
+  introImageUrl: "/images/nepali-mask-intro.jpg",
+};

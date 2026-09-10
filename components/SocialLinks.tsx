@@ -15,7 +15,7 @@ export default function SocialLinks({
     <section className="py-28 md:py-36 px-6 md:px-10 border-t border-line">
       <div className="mx-auto max-w-7xl">
         <Reveal>
-          <span className="font-mono text-[11px] tracking-widest2 text-signal">11 — CONNECT</span>
+          <span className="font-mono text-[11px] tracking-widest2 text-signal">06 — CONNECT</span>
           <h2 className="mt-4 font-display text-display-lg uppercase text-paper">Find me online.</h2>
         </Reveal>
 

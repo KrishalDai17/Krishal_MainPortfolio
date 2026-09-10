@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { saveSingleton } from "@/lib/cms/actions";
 import { Field, TextInput, TextArea, TagListInput, PrimaryButton } from "./fields";
+import ImageUploader, { UploadedImage } from "./ImageUploader";
 
 function useSingletonSave(key: string) {
   const router = useRouter();
@@ -29,13 +30,21 @@ function useSingletonSave(key: string) {
   return { save, saving, saved, error };
 }
 
-function SaveBar({ saving, saved, error }: { saving: boolean; saved: boolean; error: string }) {
+function SaveBar({
+  saving,
+  saved,
+  error,
+}: {
+  saving: boolean;
+  saved: boolean;
+  error: string;
+}) {
   return (
-    <div className="flex items-center gap-3 pt-2">
+    <div className="flex items-center gap-3 pt-4 border-t border-zinc-800">
       <PrimaryButton type="submit" disabled={saving}>
-        {saving ? "Saving…" : "Save changes"}
+        {saving ? "Saving Changes…" : "Save Changes"}
       </PrimaryButton>
-      {saved && <span className="text-xs text-emerald-400">Saved.</span>}
+      {saved && <span className="text-xs text-emerald-400">✓ Changes saved successfully.</span>}
       {error && <span className="text-xs text-red-400">{error}</span>}
     </div>
   );
@@ -44,55 +53,138 @@ function SaveBar({ saving, saved, error }: { saving: boolean; saved: boolean; er
 // ---------------------------------------------------------- Hero & Profile
 export function HeroProfileForm({ initial }: { initial: any }) {
   const [name, setName] = useState(initial.name ?? "");
+  const [designation, setDesignation] = useState(
+    initial.designation ?? "Software Developer · QA Engineer · IT Professional"
+  );
   const [roles, setRoles] = useState<string[]>(initial.roles ?? []);
   const [location, setLocation] = useState(initial.location ?? "");
   const [phone, setPhone] = useState(initial.phone ?? "");
   const [email, setEmail] = useState(initial.email ?? "");
+  const [avatar, setAvatar] = useState<UploadedImage | null>(
+    initial.avatarUrl
+      ? { url: initial.avatarUrl, publicId: initial.avatarPublicId ?? "" }
+      : null
+  );
   const [github, setGithub] = useState(initial.links?.github ?? "");
+  const [linkedin, setLinkedin] = useState(initial.links?.linkedin ?? "");
   const [facebook, setFacebook] = useState(initial.links?.facebook ?? "");
   const [instagram, setInstagram] = useState(initial.links?.instagram ?? "");
-  const [linkedin, setLinkedin] = useState(initial.links?.linkedin ?? "");
-  const [taglineTop, setTaglineTop] = useState(initial.tagline?.[0] ?? "");
-  const [taglineBottom, setTaglineBottom] = useState(initial.tagline?.[1] ?? "");
+  const [taglineTop, setTaglineTop] = useState(initial.tagline?.[0] ?? "ENGINEER BY LOGIC.");
+  const [taglineBottom, setTaglineBottom] = useState(initial.tagline?.[1] ?? "CREATOR BY VISION.");
   const [heroSupport, setHeroSupport] = useState(initial.heroSupport ?? "");
   const [roleBadges, setRoleBadges] = useState<string[]>(initial.roleBadges ?? []);
+
   const { save, saving, saved, error } = useSingletonSave("profile");
 
   return (
     <form
-      className="space-y-4 max-w-xl"
+      className="space-y-5 max-w-2xl"
       onSubmit={(e) => {
         e.preventDefault();
         save({
           name,
           firstName: name.split(" ")[0] ?? name,
           lastName: name.split(" ").slice(1).join(" "),
+          designation,
           roles,
           location,
           phone,
           email,
-          links: { github, facebook, instagram, linkedin },
+          avatarUrl: avatar?.url ?? null,
+          avatarPublicId: avatar?.publicId ?? null,
+          links: { github, linkedin, facebook, instagram },
           tagline: [taglineTop, taglineBottom],
           heroSupport,
           roleBadges,
         });
       }}
     >
-      <h1 className="text-xl font-semibold text-zinc-100 mb-4">Hero & Profile</h1>
+      <div>
+        <h1 className="text-xl font-bold text-zinc-100">Hero & Profile Settings</h1>
+        <p className="text-xs text-zinc-400 mt-1">
+          Controls the primary persona, headline, role badges, and hero content.
+        </p>
+      </div>
 
-      <Field label="Full name"><TextInput required value={name} onChange={(e) => setName(e.target.value)} /></Field>
-      <Field label="Roles (comma separated)"><TagListInput value={roles} onChange={setRoles} /></Field>
-      <Field label="Role badges shown in hero (comma separated)"><TagListInput value={roleBadges} onChange={setRoleBadges} /></Field>
-      <Field label="Location"><TextInput required value={location} onChange={(e) => setLocation(e.target.value)} /></Field>
-      <Field label="Phone"><TextInput required value={phone} onChange={(e) => setPhone(e.target.value)} /></Field>
-      <Field label="Email"><TextInput required type="email" value={email} onChange={(e) => setEmail(e.target.value)} /></Field>
-      <Field label="GitHub URL"><TextInput value={github} onChange={(e) => setGithub(e.target.value)} /></Field>
-      <Field label="Facebook URL"><TextInput value={facebook} onChange={(e) => setFacebook(e.target.value)} /></Field>
-      <Field label="Instagram URL"><TextInput value={instagram} onChange={(e) => setInstagram(e.target.value)} /></Field>
-      <Field label="LinkedIn URL"><TextInput value={linkedin} onChange={(e) => setLinkedin(e.target.value)} /></Field>
-      <Field label="Tagline — line 1 (e.g. ENGINEER BY LOGIC.)"><TextInput value={taglineTop} onChange={(e) => setTaglineTop(e.target.value)} /></Field>
-      <Field label="Tagline — line 2 (e.g. CREATOR BY VISION.)"><TextInput value={taglineBottom} onChange={(e) => setTaglineBottom(e.target.value)} /></Field>
-      <Field label="Hero supporting paragraph"><TextArea rows={3} value={heroSupport} onChange={(e) => setHeroSupport(e.target.value)} /></Field>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <Field label="Full Name">
+          <TextInput required value={name} onChange={(e) => setName(e.target.value)} />
+        </Field>
+        <Field label="Professional Designation">
+          <TextInput
+            required
+            value={designation}
+            onChange={(e) => setDesignation(e.target.value)}
+          />
+        </Field>
+      </div>
+
+      <ImageUploader label="Profile Portrait Photo" value={avatar} onChange={setAvatar} />
+
+      <Field label="Roles (comma separated)">
+        <TagListInput value={roles} onChange={setRoles} />
+      </Field>
+
+      <Field label="Role Badges shown in Hero">
+        <TagListInput value={roleBadges} onChange={setRoleBadges} />
+      </Field>
+
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <Field label="Location">
+          <TextInput required value={location} onChange={(e) => setLocation(e.target.value)} />
+        </Field>
+        <Field label="Phone">
+          <TextInput required value={phone} onChange={(e) => setPhone(e.target.value)} />
+        </Field>
+        <Field label="Email">
+          <TextInput
+            required
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </Field>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <Field label="Tagline Line 1 (e.g. ENGINEER BY LOGIC.)">
+          <TextInput
+            required
+            value={taglineTop}
+            onChange={(e) => setTaglineTop(e.target.value)}
+          />
+        </Field>
+        <Field label="Tagline Line 2 (e.g. CREATOR BY VISION.)">
+          <TextInput
+            required
+            value={taglineBottom}
+            onChange={(e) => setTaglineBottom(e.target.value)}
+          />
+        </Field>
+      </div>
+
+      <Field label="Hero Supporting Statement">
+        <TextArea
+          rows={3}
+          value={heroSupport}
+          onChange={(e) => setHeroSupport(e.target.value)}
+        />
+      </Field>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-zinc-800 pt-4">
+        <Field label="GitHub Profile URL">
+          <TextInput value={github} onChange={(e) => setGithub(e.target.value)} />
+        </Field>
+        <Field label="LinkedIn Profile URL">
+          <TextInput value={linkedin} onChange={(e) => setLinkedin(e.target.value)} />
+        </Field>
+        <Field label="Instagram URL">
+          <TextInput value={instagram} onChange={(e) => setInstagram(e.target.value)} />
+        </Field>
+        <Field label="Facebook URL">
+          <TextInput value={facebook} onChange={(e) => setFacebook(e.target.value)} />
+        </Field>
+      </div>
 
       <SaveBar saving={saving} saved={saved} error={error} />
     </form>
@@ -102,6 +194,8 @@ export function HeroProfileForm({ initial }: { initial: any }) {
 // ---------------------------------------------------------- About
 export function AboutForm({ initial }: { initial: any }) {
   const [intro, setIntro] = useState<string[]>(initial.intro ?? []);
+  const [careerSummary, setCareerSummary] = useState(initial.careerSummary ?? "");
+  const [highlights, setHighlights] = useState<string[]>(initial.highlights ?? []);
   const [cards, setCards] = useState(initial.identityCards ?? []);
   const { save, saving, saved, error } = useSingletonSave("about");
 
@@ -113,16 +207,38 @@ export function AboutForm({ initial }: { initial: any }) {
 
   return (
     <form
-      className="space-y-6 max-w-xl"
+      className="space-y-6 max-w-2xl"
       onSubmit={(e) => {
         e.preventDefault();
-        save({ intro, identityCards: cards });
+        save({
+          intro,
+          careerSummary,
+          highlights,
+          identityCards: cards,
+        });
       }}
     >
-      <h1 className="text-xl font-semibold text-zinc-100 mb-4">About</h1>
+      <div>
+        <h1 className="text-xl font-bold text-zinc-100">About & Career Summary</h1>
+        <p className="text-xs text-zinc-400 mt-1">
+          Manages the editorial bio, core highlights, and identity cards.
+        </p>
+      </div>
+
+      <Field label="Career Summary Callout">
+        <TextArea
+          rows={2}
+          value={careerSummary}
+          onChange={(e) => setCareerSummary(e.target.value)}
+        />
+      </Field>
+
+      <Field label="Core Highlights (comma separated)">
+        <TagListInput value={highlights} onChange={setHighlights} />
+      </Field>
 
       {intro.map((p: string, i: number) => (
-        <Field key={i} label={`Paragraph ${i + 1}`}>
+        <Field key={i} label={`Bio Paragraph ${i + 1}`}>
           <TextArea
             rows={3}
             value={p}
@@ -136,12 +252,23 @@ export function AboutForm({ initial }: { initial: any }) {
       ))}
 
       <div>
-        <span className="text-xs font-medium text-zinc-400 block mb-2">Identity cards</span>
+        <span className="text-xs font-medium text-zinc-400 block mb-2">
+          Identity Pillars
+        </span>
         <div className="space-y-3">
           {cards.map((c: any, i: number) => (
-            <div key={i} className="border border-zinc-800 rounded-md p-3 space-y-2">
-              <TextInput value={c.title} onChange={(e) => updateCard(i, "title", e.target.value)} placeholder="Title" />
-              <TextArea rows={2} value={c.description} onChange={(e) => updateCard(i, "description", e.target.value)} placeholder="Description" />
+            <div key={i} className="border border-zinc-800 rounded-md p-3 space-y-2 bg-zinc-900/30">
+              <TextInput
+                value={c.title}
+                onChange={(e) => updateCard(i, "title", e.target.value)}
+                placeholder="Title"
+              />
+              <TextArea
+                rows={2}
+                value={c.description}
+                onChange={(e) => updateCard(i, "description", e.target.value)}
+                placeholder="Description"
+              />
             </div>
           ))}
         </div>
@@ -152,7 +279,7 @@ export function AboutForm({ initial }: { initial: any }) {
   );
 }
 
-// ---------------------------------------------------------- QA
+// ---------------------------------------------------------- QA Section
 export function QAForm({ initial }: { initial: any }) {
   const [workflow, setWorkflow] = useState<string[]>(initial.workflow ?? []);
   const [cards, setCards] = useState<string[]>(initial.cards ?? []);
@@ -161,16 +288,155 @@ export function QAForm({ initial }: { initial: any }) {
 
   return (
     <form
-      className="space-y-4 max-w-xl"
+      className="space-y-5 max-w-xl"
       onSubmit={(e) => {
         e.preventDefault();
         save({ workflow, cards, tools });
       }}
     >
-      <h1 className="text-xl font-semibold text-zinc-100 mb-4">QA Section</h1>
-      <Field label="Workflow steps (comma separated, in order)"><TagListInput value={workflow} onChange={setWorkflow} /></Field>
-      <Field label="Testing focus cards (comma separated)"><TagListInput value={cards} onChange={setCards} /></Field>
-      <Field label="Tools (comma separated)"><TagListInput value={tools} onChange={setTools} /></Field>
+      <h1 className="text-xl font-bold text-zinc-100">QA Methodology & Workflow</h1>
+      <Field label="Workflow Steps (in chronological sequence)">
+        <TagListInput value={workflow} onChange={setWorkflow} />
+      </Field>
+      <Field label="Testing Specializations">
+        <TagListInput value={cards} onChange={setCards} />
+      </Field>
+      <Field label="Testing Tools">
+        <TagListInput value={tools} onChange={setTools} />
+      </Field>
+      <SaveBar saving={saving} saved={saved} error={error} />
+    </form>
+  );
+}
+
+// ---------------------------------------------------------- SEO
+export function SEOForm({ initial }: { initial: any }) {
+  const [title, setTitle] = useState(initial.title ?? "");
+  const [description, setDescription] = useState(initial.description ?? "");
+  const { save, saving, saved, error } = useSingletonSave("seo");
+
+  return (
+    <form
+      className="space-y-5 max-w-xl"
+      onSubmit={(e) => {
+        e.preventDefault();
+        save({ title, description });
+      }}
+    >
+      <h1 className="text-xl font-bold text-zinc-100">Global SEO & Metadata</h1>
+      <Field label="Site Title Tag">
+        <TextInput required value={title} onChange={(e) => setTitle(e.target.value)} />
+      </Field>
+      <Field label="Meta Description">
+        <TextArea
+          required
+          rows={3}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+      </Field>
+      <SaveBar saving={saving} saved={saved} error={error} />
+    </form>
+  );
+}
+
+// ---------------------------------------------------------- Settings
+export function SettingsForm({ initial }: { initial: any }) {
+  const [available, setAvailable] = useState<boolean>(
+    initial.availableForOpportunities ?? true
+  );
+  const [footerNote, setFooterNote] = useState(initial.footerNote ?? "");
+  const [introEnabled, setIntroEnabled] = useState<boolean>(
+    initial.introEnabled ?? true
+  );
+  const [introDuration, setIntroDuration] = useState<number>(
+    initial.introDuration ?? 2.8
+  );
+  const [introFrequency, setIntroFrequency] = useState<string>(
+    initial.introFrequency ?? "once_per_session"
+  );
+  const [introImageUrl, setIntroImageUrl] = useState<string>(
+    initial.introImageUrl ?? "/images/nepali-mask-intro.jpg"
+  );
+  const { save, saving, saved, error } = useSingletonSave("settings");
+
+  return (
+    <form
+      className="space-y-6 max-w-xl"
+      onSubmit={(e) => {
+        e.preventDefault();
+        save({
+          availableForOpportunities: available,
+          footerNote,
+          introEnabled,
+          introDuration: Number(introDuration) || 2.8,
+          introFrequency,
+          introImageUrl,
+        });
+      }}
+    >
+      <h1 className="text-xl font-bold text-zinc-100">Site Settings</h1>
+
+      <div className="rounded-lg border border-zinc-800 bg-zinc-900/40 p-5 space-y-4">
+        <h2 className="text-sm font-semibold text-zinc-200 uppercase tracking-wider">
+          Traditional Nepali Mask Intro Experience
+        </h2>
+        <label className="flex items-center gap-2 text-sm text-zinc-300">
+          <input
+            type="checkbox"
+            checked={introEnabled}
+            onChange={(e) => setIntroEnabled(e.target.checked)}
+          />
+          Enable Artistic Mask Opening Animation
+        </label>
+        <Field label="Intro Duration (Seconds, e.g. 2.8)">
+          <TextInput
+            type="number"
+            step="0.1"
+            min="1.5"
+            max="6.0"
+            value={introDuration}
+            onChange={(e) => setIntroDuration(parseFloat(e.target.value) || 2.8)}
+          />
+        </Field>
+        <Field label="Intro Display Frequency">
+          <select
+            value={introFrequency}
+            onChange={(e) => setIntroFrequency(e.target.value)}
+            className="w-full rounded-md border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-zinc-100 focus:border-zinc-500 focus:outline-none"
+          >
+            <option value="once_per_session">Once Per Session (Recommended — Fast Repeat Visits)</option>
+            <option value="always">Every Visit / Refresh</option>
+          </select>
+        </Field>
+        <Field label="Intro Mask Artwork Path or Cloudinary URL">
+          <TextInput
+            value={introImageUrl}
+            onChange={(e) => setIntroImageUrl(e.target.value)}
+          />
+        </Field>
+      </div>
+
+      <div className="rounded-lg border border-zinc-800 bg-zinc-900/40 p-5 space-y-4">
+        <h2 className="text-sm font-semibold text-zinc-200 uppercase tracking-wider">
+          General Settings
+        </h2>
+        <label className="flex items-center gap-2 text-sm text-zinc-300">
+          <input
+            type="checkbox"
+            checked={available}
+            onChange={(e) => setAvailable(e.target.checked)}
+          />
+          Show &quot;Available for opportunities / hire&quot; pulse indicator
+        </label>
+        <Field label="Footer Copyright Note">
+          <TextInput
+            value={footerNote}
+            onChange={(e) => setFooterNote(e.target.value)}
+          />
+        </Field>
+      </div>
+
       <SaveBar saving={saving} saved={saved} error={error} />
     </form>
   );
@@ -191,8 +457,12 @@ export function DataSectionForm({ initial }: { initial: any }) {
       }}
     >
       <h1 className="text-xl font-semibold text-zinc-100 mb-4">Data & Digital Operations</h1>
-      <Field label="Capabilities (comma separated)"><TagListInput value={capabilities} onChange={setCapabilities} /></Field>
-      <Field label="Flow steps (comma separated, in order)"><TagListInput value={flow} onChange={setFlow} /></Field>
+      <Field label="Capabilities (comma separated)">
+        <TagListInput value={capabilities} onChange={setCapabilities} />
+      </Field>
+      <Field label="Flow steps (comma separated, in order)">
+        <TagListInput value={flow} onChange={setFlow} />
+      </Field>
       <SaveBar saving={saving} saved={saved} error={error} />
     </form>
   );
@@ -213,55 +483,12 @@ export function PhilosophyForm({ initial }: { initial: any }) {
       }}
     >
       <h1 className="text-xl font-semibold text-zinc-100 mb-4">Philosophy</h1>
-      <Field label="Words (comma separated, in order)"><TagListInput value={words} onChange={setWords} /></Field>
-      <Field label="Statement"><TextArea rows={3} value={statement} onChange={(e) => setStatement(e.target.value)} /></Field>
-      <SaveBar saving={saving} saved={saved} error={error} />
-    </form>
-  );
-}
-
-// ---------------------------------------------------------- SEO
-export function SEOForm({ initial }: { initial: any }) {
-  const [title, setTitle] = useState(initial.title ?? "");
-  const [description, setDescription] = useState(initial.description ?? "");
-  const { save, saving, saved, error } = useSingletonSave("seo");
-
-  return (
-    <form
-      className="space-y-4 max-w-xl"
-      onSubmit={(e) => {
-        e.preventDefault();
-        save({ title, description });
-      }}
-    >
-      <h1 className="text-xl font-semibold text-zinc-100 mb-4">SEO</h1>
-      <Field label="Page title"><TextInput required value={title} onChange={(e) => setTitle(e.target.value)} /></Field>
-      <Field label="Meta description"><TextArea required rows={3} value={description} onChange={(e) => setDescription(e.target.value)} /></Field>
-      <SaveBar saving={saving} saved={saved} error={error} />
-    </form>
-  );
-}
-
-// ---------------------------------------------------------- Settings
-export function SettingsForm({ initial }: { initial: any }) {
-  const [available, setAvailable] = useState<boolean>(initial.availableForOpportunities ?? true);
-  const [footerNote, setFooterNote] = useState(initial.footerNote ?? "");
-  const { save, saving, saved, error } = useSingletonSave("settings");
-
-  return (
-    <form
-      className="space-y-4 max-w-xl"
-      onSubmit={(e) => {
-        e.preventDefault();
-        save({ availableForOpportunities: available, footerNote });
-      }}
-    >
-      <h1 className="text-xl font-semibold text-zinc-100 mb-4">Site Settings</h1>
-      <label className="flex items-center gap-2 text-sm text-zinc-300">
-        <input type="checkbox" checked={available} onChange={(e) => setAvailable(e.target.checked)} />
-        Show &quot;Available for opportunities&quot; indicator
-      </label>
-      <Field label="Footer copyright note"><TextInput value={footerNote} onChange={(e) => setFooterNote(e.target.value)} /></Field>
+      <Field label="Words (comma separated, in order)">
+        <TagListInput value={words} onChange={setWords} />
+      </Field>
+      <Field label="Statement">
+        <TextArea rows={3} value={statement} onChange={(e) => setStatement(e.target.value)} />
+      </Field>
       <SaveBar saving={saving} saved={saved} error={error} />
     </form>
   );

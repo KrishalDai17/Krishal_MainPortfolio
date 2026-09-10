@@ -35,11 +35,37 @@ create table if not exists skill_categories (
 create table if not exists projects (
   id uuid primary key default gen_random_uuid(),
   name text not null,
+  slug text unique,
+  category text default 'WEB',
+  status text default 'COMPLETED',
+  featured boolean not null default true,
+  short_description text,
   description text not null,
-  technology text[] not null default '{}',
+  overview text,
+  problem text,
+  solution text,
   features text[] not null default '{}',
+  technical_implementation text,
+  my_contribution text,
+  challenges text,
+  challenges_solutions text,
+  technology text[] not null default '{}',
   github_url text,
   demo_url text,
+  cover_image_url text,
+  cover_image_public_id text,
+  screenshots text[] not null default '{}',
+  order_index int not null default 0,
+  published boolean not null default true,
+  updated_at timestamptz not null default now()
+);
+
+create table if not exists photography_albums (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  slug text not null unique,
+  category text not null,
+  description text,
   cover_image_url text,
   cover_image_public_id text,
   order_index int not null default 0,
@@ -51,13 +77,57 @@ create table if not exists photo_items (
   id uuid primary key default gen_random_uuid(),
   title text not null,
   category text not null,
+  album_slug text,
   description text,
+  location text,
+  date_taken text,
   image_url text,
   image_public_id text,
   alt_text text,
+  featured boolean not null default false,
   order_index int not null default 0,
   published boolean not null default true,
   updated_at timestamptz not null default now()
+);
+
+create table if not exists qa_projects (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  project text not null,
+  testing_type text not null,
+  tools text[] not null default '{}',
+  test_cases text,
+  bug_reports text,
+  api_testing text,
+  database_testing text,
+  result text,
+  order_index int not null default 0,
+  published boolean not null default true,
+  updated_at timestamptz not null default now()
+);
+
+create table if not exists experience_items (
+  id uuid primary key default gen_random_uuid(),
+  company text not null,
+  position text not null,
+  period text not null,
+  description text not null,
+  responsibilities text[] not null default '{}',
+  technologies text[] not null default '{}',
+  order_index int not null default 0,
+  published boolean not null default true,
+  updated_at timestamptz not null default now()
+);
+
+create table if not exists contact_messages (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  email text not null,
+  phone text,
+  subject text,
+  message text not null,
+  read boolean not null default false,
+  created_at timestamptz not null default now()
 );
 
 create table if not exists video_items (
@@ -79,6 +149,7 @@ create table if not exists education_items (
   institution text not null,
   program text not null,
   location text not null,
+  description text,
   order_index int not null default 0,
   published boolean not null default true,
   updated_at timestamptz not null default now()
@@ -116,10 +187,7 @@ create table if not exists social_links (
 );
 
 -- ---------------------------------------------------------
--- General media library (Cloudinary references only — never
--- binary data). Item tables above also keep their own
--- image_url/public_id columns for direct rendering; this table
--- is the browsable library used by the admin media picker.
+-- Media library
 -- ---------------------------------------------------------
 create table if not exists media_assets (
   id uuid primary key default gen_random_uuid(),
@@ -148,8 +216,9 @@ do $$
 declare t text;
 begin
   foreach t in array array[
-    'content_singletons','skill_categories','projects','photo_items',
-    'video_items','education_items','learning_items','contribution_items','social_links'
+    'content_singletons','skill_categories','projects','photography_albums',
+    'photo_items','qa_projects','experience_items','video_items',
+    'education_items','learning_items','contribution_items','social_links'
   ] loop
     execute format('drop trigger if exists trg_set_updated_at on %I;', t);
     execute format('create trigger trg_set_updated_at before update on %I for each row execute function set_updated_at();', t);
@@ -158,13 +227,15 @@ end $$;
 
 -- ---------------------------------------------------------
 -- Row Level Security
--- Public (anon): read-only, published rows only.
--- Authenticated (logged into /admin via Supabase Auth): full access.
 -- ---------------------------------------------------------
 alter table content_singletons enable row level security;
 alter table skill_categories enable row level security;
 alter table projects enable row level security;
+alter table photography_albums enable row level security;
 alter table photo_items enable row level security;
+alter table qa_projects enable row level security;
+alter table experience_items enable row level security;
+alter table contact_messages enable row level security;
 alter table video_items enable row level security;
 alter table education_items enable row level security;
 alter table learning_items enable row level security;
@@ -180,8 +251,9 @@ begin
   execute 'create policy "auth write singletons" on content_singletons for all using (auth.role() = ''authenticated'') with check (auth.role() = ''authenticated'')';
 
   foreach t in array array[
-    'skill_categories','projects','photo_items','video_items',
-    'education_items','learning_items','contribution_items','social_links'
+    'skill_categories','projects','photography_albums','photo_items',
+    'qa_projects','experience_items','video_items','education_items',
+    'learning_items','contribution_items','social_links'
   ] loop
     execute format('create policy "public read published %1$s" on %1$s for select using (published = true)', t);
     execute format('create policy "auth full access %1$s" on %1$s for all using (auth.role() = ''authenticated'') with check (auth.role() = ''authenticated'')', t);
@@ -189,4 +261,8 @@ begin
 
   execute 'create policy "public read media" on media_assets for select using (published = true)';
   execute 'create policy "auth full access media" on media_assets for all using (auth.role() = ''authenticated'') with check (auth.role() = ''authenticated'')';
+
+  -- contact_messages: public can insert (send inquiries), authenticated admin can read/manage
+  execute 'create policy "public insert contact_messages" on contact_messages for insert with check (true)';
+  execute 'create policy "auth full access contact_messages" on contact_messages for all using (auth.role() = ''authenticated'') with check (auth.role() = ''authenticated'')';
 end $$;

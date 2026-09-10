@@ -4,8 +4,9 @@ import "./globals.css";
 import ThemeInit from "@/components/ThemeInit";
 import CustomCursor from "@/components/CustomCursor";
 import ScrollProgress from "@/components/ScrollProgress";
-import LoadingScreen from "@/components/LoadingScreen";
 import AmbientBackground from "@/components/AmbientBackground";
+import NepaliMaskIntro from "@/components/NepaliMaskIntro";
+import { getSettings } from "@/lib/cms/content";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -43,7 +44,7 @@ const instrumentSerif = Instrument_Serif({
   display: "swap",
 });
 
-const siteUrl = "https://krishalshrestha.dev";
+const siteUrl = "https://krishals.com.np";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { getSEO } = await import("@/lib/cms/content");
@@ -69,18 +70,32 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const settings = await getSettings();
+
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var s=localStorage.getItem('ks-theme');var p=window.matchMedia('(prefers-color-scheme: light)').matches;var t=s||(p?'light':'dark');if(t==='light'){document.documentElement.classList.add('light');}else{document.documentElement.classList.remove('light');}}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body
         className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} ${dmSans.variable} ${instrumentSerif.variable} font-body`}
       >
         <ThemeInit />
-        <LoadingScreen />
+        <NepaliMaskIntro
+          imageUrl={settings.introImageUrl}
+          durationSeconds={settings.introDuration}
+          frequency={settings.introFrequency}
+          enabled={settings.introEnabled}
+        />
         <AmbientBackground />
         <div className="grain-overlay bg-grain" aria-hidden="true" />
         <CustomCursor />
