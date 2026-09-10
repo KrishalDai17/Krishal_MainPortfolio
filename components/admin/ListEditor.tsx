@@ -39,7 +39,9 @@ export default function ListEditor<T extends ListEditorItem>({
     if (swap < 0 || swap >= next.length) return;
     [next[idx], next[swap]] = [next[swap], next[idx]];
     setOrder(next);
-    startTransition(() => reorderRecords(table, next));
+    startTransition(() => {
+      void reorderRecords(table, next);
+    });
   };
 
   return (
@@ -76,7 +78,9 @@ export default function ListEditor<T extends ListEditorItem>({
 
             <button
               onClick={() =>
-                startTransition(() => togglePublished(table, item.id, !(item.published ?? true)))
+                startTransition(() => {
+                  void togglePublished(table, item.id, !(item.published ?? true));
+                })
               }
               className={`p-1.5 rounded ${
                 item.published === false ? "text-zinc-600 hover:text-zinc-300" : "text-emerald-400 hover:text-emerald-300"
@@ -96,7 +100,9 @@ export default function ListEditor<T extends ListEditorItem>({
             <button
               onClick={() => {
                 if (confirm("Delete this item? This cannot be undone.")) {
-                  startTransition(() => deleteRecord(table, item.id));
+                  startTransition(() => {
+                    void deleteRecord(table, item.id);
+                  });
                 }
               }}
               className="text-zinc-600 hover:text-red-400 p-1.5"
