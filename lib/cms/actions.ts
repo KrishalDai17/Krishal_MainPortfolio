@@ -36,60 +36,144 @@ function assertTable(table: string): asserts table is ListTable {
   }
 }
 
-export async function saveSingleton(key: string, data: Record<string, unknown>) {
-  const supabase = await requireAdmin();
-  const { error } = await supabase
-    .from("content_singletons")
-    .upsert({ key, data, updated_at: new Date().toISOString() });
-  if (error) throw new Error(error.message);
-  revalidatePath("/");
-  revalidatePath("/admin");
+const TABLE_ROUTES: Record<string, string> = {
+  skill_categories: "/admin/skills",
+  projects: "/admin/projects",
+  photography_albums: "/admin/albums",
+  photo_items: "/admin/photography",
+  qa_projects: "/admin/qa",
+  experience_items: "/admin/experience",
+  contact_messages: "/admin/messages",
+  education_items: "/admin/education",
+  social_links: "/admin/social-links",
+  media_assets: "/admin/media",
+};
+
+function safeRevalidate(table?: string) {
+  try {
+    revalidatePath("/");
+    revalidatePath("/admin");
+    if (table && TABLE_ROUTES[table]) {
+      revalidatePath(TABLE_ROUTES[table]);
+    }
+  } catch (err) {
+    console.warn("Revalidate path warning:", err);
+  }
 }
 
-export async function createRecord(table: string, record: Record<string, unknown>) {
-  assertTable(table);
-  const supabase = await requireAdmin();
-  const { error } = await supabase.from(table).insert(record);
-  if (error) throw new Error(error.message);
-  revalidatePath("/");
-  revalidatePath(`/admin/${table}`);
+export type ServerActionResult = {
+  success: boolean;
+  error?: string;
+};
+
+export async function saveSingleton(
+  key: string,
+  data: Record<string, unknown>
+): Promise<ServerActionResult> {
+  try {
+    const supabase = await requireAdmin();
+    const { error } = await supabase
+      .from("content_singletons")
+      .upsert({ key, data, updated_at: new Date().toISOString() });
+    if (error) return { success: false, error: error.message };
+    safeRevalidate();
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message || "Failed to save singleton." };
+  }
 }
 
-export async function updateRecord(table: string, id: string, record: Record<string, unknown>) {
-  assertTable(table);
-  const supabase = await requireAdmin();
-  const { error } = await supabase.from(table).update(record).eq("id", id);
-  if (error) throw new Error(error.message);
-  revalidatePath("/");
-  revalidatePath(`/admin/${table}`);
+export async function createRecord(
+  table: string,
+  record: Record<string, unknown>
+): Promise<ServerActionResult> {
+  try {
+    assertTable(table);
+    const supabase = await requireAdmin();
+    const { error } = await supabase.from(table).insert(record);
+    if (error) {
+      console.error(`Error inserting into ${table}:`, error.message);
+      return { success: false, error: error.message };
+    }
+    safeRevalidate(table);
+    return { success: true };
+  } catch (err: any) {
+    console.error(`Exception inserting into ${table}:`, err.message);
+    return { success: false, error: err.message || "Failed to create record." };
+  }
 }
 
-export async function deleteRecord(table: string, id: string) {
-  assertTable(table);
-  const supabase = await requireAdmin();
-  const { error } = await supabase.from(table).delete().eq("id", id);
-  if (error) throw new Error(error.message);
-  revalidatePath("/");
-  revalidatePath(`/admin/${table}`);
+export async function updateRecord(
+  table: string,
+  id: string,
+  record: Record<string, unknown>
+): Promise<ServerActionResult> {
+  try {
+    assertTable(table);
+    const supabase = await requireAdmin();
+    const { error } = await supabase.from(table).update(record).eq("id", id);
+    if (error) {
+      console.error(`Error updating in ${table}:`, error.message);
+      return { success: false, error: error.message };
+    }
+    safeRevalidate(table);
+    return { success: true };
+  } catch (err: any) {
+    console.error(`Exception updating in ${table}:`, err.message);
+    return { success: false, error: err.message || "Failed to update record." };
+  }
 }
 
-export async function togglePublished(table: string, id: string, published: boolean) {
-  assertTable(table);
-  const supabase = await requireAdmin();
-  const { error } = await supabase.from(table).update({ published }).eq("id", id);
-  if (error) throw new Error(error.message);
-  revalidatePath("/");
-  revalidatePath(`/admin/${table}`);
+export async function deleteRecord(
+  table: string,
+  id: string
+): Promise<ServerActionResult> {
+  try {
+    assertTable(table);
+    const supabase = await requireAdmin();
+    const { error } = await supabase.from(table).delete().eq("id", id);
+    if (error) return { success: false, error: error.message };
+    safeRevalidate(table);
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message || "Failed to delete record." };
+  }
 }
 
-export async function reorderRecords(table: string, orderedIds: string[]) {
-  assertTable(table);
-  const supabase = await requireAdmin();
-  await Promise.all(
-    orderedIds.map((id, i) => supabase.from(table).update({ order_index: i }).eq("id", id))
-  );
-  revalidatePath("/");
-  revalidatePath(`/admin/${table}`);
+export async function togglePublished(
+  table: string,
+  id: string,
+  published: boolean
+): Promise<ServerActionResult> {
+  try {
+    assertTable(table);
+    const supabase = await requireAdmin();
+    const { error } = await supabase.from(table).update({ published }).eq("id", id);
+    if (error) return { success: false, error: error.message };
+    safeRevalidate(table);
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message || "Failed to toggle published." };
+  }
+}
+
+export async function reorderRecords(
+  table: string,
+  orderedIds: string[]
+): Promise<ServerActionResult> {
+  try {
+    assertTable(table);
+    const supabase = await requireAdmin();
+    await Promise.all(
+      orderedIds.map((id, i) =>
+        supabase.from(table).update({ order_index: i }).eq("id", id)
+      )
+    );
+    safeRevalidate(table);
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message || "Failed to reorder records." };
+  }
 }
 
 // ----------------------------------------------------------
