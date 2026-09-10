@@ -323,18 +323,18 @@ function ProjectForm({ item, close }: { item: ProjectRow | null; close: () => vo
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <Field label="GitHub Repository URL">
+        <Field label="GitHub Repository URL (Direct Git Project Code)">
           <TextInput
             value={githubUrl}
             onChange={(e) => setGithubUrl(e.target.value)}
-            placeholder="https://github.com/KrishalDai17/repo"
+            placeholder="https://github.com/KrishalDai17/project-name"
           />
         </Field>
-        <Field label="Live Demo URL">
+        <Field label="Live Demo URL (Website / Interactive App)">
           <TextInput
             value={demoUrl}
             onChange={(e) => setDemoUrl(e.target.value)}
-            placeholder="https://demo.example.com"
+            placeholder="https://my-project-website.vercel.app"
           />
         </Field>
       </div>

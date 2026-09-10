@@ -106,8 +106,13 @@ export async function getProjects(): Promise<Project[]> {
       challenges: r.challenges || "",
       challengesSolutions: r.challenges_solutions || "",
       technology: r.technology ?? [],
-      github: r.github_url ?? undefined,
-      demo: r.demo_url ?? undefined,
+      github:
+        r.github_url?.trim() ||
+        `https://github.com/KrishalDai17/${r.slug || r.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
+      demo:
+        r.demo_url?.trim() ||
+        r.github_url?.trim() ||
+        `https://github.com/KrishalDai17/${r.slug || r.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
       coverImageUrl: r.cover_image_url ?? undefined,
       screenshots: r.screenshots ?? [],
     }));

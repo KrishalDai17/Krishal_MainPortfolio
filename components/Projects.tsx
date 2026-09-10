@@ -5,7 +5,6 @@ import Link from "next/link";
 import { Github, ArrowUpRight, ExternalLink, Code2 } from "lucide-react";
 import { projects as defaultProjects, projectCategories, Project } from "@/lib/data";
 import Reveal from "./Reveal";
-
 export default function Projects({
   projects = defaultProjects,
 }: {
@@ -141,32 +140,31 @@ export default function Projects({
                 {/* Card Action Footer */}
                 <div className="p-6 pt-0 border-t border-line/40 mt-4 flex items-center justify-between gap-2 flex-wrap">
                   <div className="flex items-center gap-2">
-                    {project.github && (
-                      <a
-                        href={project.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label="GitHub Repository"
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1.5 border border-line text-paper-dim hover:text-paper hover:border-signal hover:bg-paper/5 font-mono text-[10px] tracking-wider transition-all duration-200 rounded-sm hover:scale-105 active:scale-95"
-                        title="GitHub Repository"
-                      >
-                        <Github size={12} />
-                        <span>CODE</span>
-                      </a>
-                    )}
-                    {project.demo && (
-                      <a
-                        href={project.demo}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label="Live Demo"
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1.5 border border-line text-paper-dim hover:text-paper hover:border-signal hover:bg-paper/5 font-mono text-[10px] tracking-wider transition-all duration-200 rounded-sm hover:scale-105 active:scale-95"
-                        title="Live Demo"
-                      >
-                        <ExternalLink size={12} />
-                        <span>DEMO</span>
-                      </a>
-                    )}
+                    {/* Direct Git Project Code */}
+                    <a
+                      href={project.github || `https://github.com/KrishalDai17/${project.slug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Direct Git Project Code"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-line bg-paper/5 text-paper hover:text-white hover:border-signal hover:bg-signal/20 font-mono text-[10px] tracking-wider transition-all duration-150 rounded-sm hover:scale-105 active:scale-95"
+                      title="Direct GitHub Project Code"
+                    >
+                      <Github size={12} />
+                      <span>CODE</span>
+                    </a>
+
+                    {/* Direct Live Website Demo */}
+                    <a
+                      href={project.demo || project.github || `https://github.com/KrishalDai17/${project.slug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Open Live Project Website"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-signal/60 bg-signal/15 text-signal hover:text-white hover:border-signal hover:bg-signal font-mono text-[10px] tracking-wider transition-all duration-150 rounded-sm hover:scale-105 active:scale-95 shadow-sm font-medium"
+                      title="Open Live Project Website"
+                    >
+                      <ExternalLink size={12} />
+                      <span>DEMO</span>
+                    </a>
                   </div>
 
                   <Link
@@ -182,6 +180,12 @@ export default function Projects({
           ))}
         </div>
       </div>
+
+      {/* Interactive Live Project Runner Modal */}
+      <LiveDemoModal
+        project={activeDemoProject}
+        onClose={() => setActiveDemoProject(null)}
+      />
     </section>
   );
 }
