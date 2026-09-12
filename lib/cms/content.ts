@@ -52,6 +52,7 @@ export async function getProfile(): Promise<Profile> {
 
 export async function getAbout() {
   return safeSingleton("about", {
+    focus: fallback.aboutFocus,
     intro: fallback.aboutIntro,
     careerSummary: fallback.careerSummary,
     highlights: fallback.aboutHighlights,

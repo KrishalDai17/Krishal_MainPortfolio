@@ -15,6 +15,7 @@ import {
   aboutHighlights as defaultHighlights,
   whatIDoItems as defaultWhatIDo,
   identityCards as defaultCards,
+  aboutFocus as defaultAboutFocus,
   WhatIDoItem,
 } from "@/lib/data";
 import Reveal from "./Reveal";
@@ -34,6 +35,7 @@ export default function About({
   highlights = defaultHighlights,
   whatIDo = defaultWhatIDo,
   identityCards = defaultCards,
+  focus = defaultAboutFocus,
 }: {
   profile?: typeof defaultProfile;
   aboutIntro?: string[];
@@ -41,6 +43,7 @@ export default function About({
   highlights?: string[];
   whatIDo?: WhatIDoItem[];
   identityCards?: typeof defaultCards;
+  focus?: string;
 } = {}) {
   return (
     <section
@@ -98,7 +101,7 @@ export default function About({
                 </div>
                 <div className="flex justify-between border-b border-line/50 pb-2">
                   <span className="text-paper-dim">FOCUS</span>
-                  <span className="text-paper">Software Engineering & QA</span>
+                  <span className="text-paper">{focus}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-paper-dim">CREATIVE</span>

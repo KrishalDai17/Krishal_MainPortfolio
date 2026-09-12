@@ -70,6 +70,7 @@ export default async function Home() {
         highlights={about.highlights}
         whatIDo={about.whatIDo}
         identityCards={about.identityCards}
+        focus={about.focus}
       />
 
       {/* 4. Skills Capability Matrix */}

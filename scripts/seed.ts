@@ -45,6 +45,7 @@ async function main() {
   });
 
   await seedSingleton("about", {
+    focus: data.aboutFocus,
     intro: data.aboutIntro,
     careerSummary: data.careerSummary,
     highlights: data.aboutHighlights,

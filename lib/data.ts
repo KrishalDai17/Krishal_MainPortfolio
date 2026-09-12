@@ -116,6 +116,8 @@ export const aboutHighlights = [
   "Creative Photography",
 ];
 
+export const aboutFocus = "Software Engineering & Full Stack";
+
 export interface WhatIDoItem {
   title: string;
   description: string;

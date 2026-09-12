@@ -231,6 +231,7 @@ export function HeroProfileForm({ initial }: { initial: any }) {
 
 // ---------------------------------------------------------- About
 export function AboutForm({ initial }: { initial: any }) {
+  const [focus, setFocus] = useState(initial.focus ?? "Software Engineering & Full Stack");
   const [intro, setIntro] = useState<string[]>(initial.intro ?? []);
   const [careerSummary, setCareerSummary] = useState(initial.careerSummary ?? "");
   const [highlights, setHighlights] = useState<string[]>(initial.highlights ?? []);
@@ -249,6 +250,7 @@ export function AboutForm({ initial }: { initial: any }) {
       onSubmit={(e) => {
         e.preventDefault();
         save({
+          focus,
           intro,
           careerSummary,
           highlights,
@@ -259,9 +261,17 @@ export function AboutForm({ initial }: { initial: any }) {
       <div>
         <h1 className="text-xl font-bold text-zinc-100">About & Career Summary</h1>
         <p className="text-xs text-zinc-400 mt-1">
-          Manages the editorial bio, core highlights, and identity cards.
+          Manages the editorial bio, focus area, core highlights, and identity cards.
         </p>
       </div>
+
+      <Field label="Focus Area">
+        <TextInput
+          value={focus}
+          onChange={(e) => setFocus(e.target.value)}
+          placeholder="Software Engineering & Full Stack"
+        />
+      </Field>
 
       <Field label="Career Summary Callout">
         <TextArea
